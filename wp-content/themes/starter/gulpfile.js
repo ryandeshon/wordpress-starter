@@ -8,18 +8,7 @@ var gulp   		= require('gulp'),
 
 var config = {
 	scripts: [
-		'./assets/js/vendor/bootstrap/util.js',
-		'./assets/js/vendor/bootstrap/alert.js',
-		'./assets/js/vendor/bootstrap/button.js',
-		'./assets/js/vendor/bootstrap/carousel.js',
-		'./assets/js/vendor/bootstrap/collapse.js',
-		'./assets/js/vendor/bootstrap/dropdown.js',
-		'./assets/js/vendor/bootstrap/modal.js',
-		'./assets/js/vendor/bootstrap/scrollspy.js',
-		'./assets/js/vendor/bootstrap/tab.js',
-		// Tooltip requires Tether to work properly
-		// './assets/js/vendor/bootstrap/tooltip.js',
-		// './assets/js/vendor/bootstrap/popover.js',
+		'./node_modules/bootstrap/dist/js/bootstrap.js',
 		// Modernizr
 		'./assets/js/vendor/modernizr/modernizr.shiv.js',
 		// Any Custom Scripts
@@ -40,7 +29,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('sass', function () {
-	return gulp.src('./assets/sass/style.scss')
+	return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss', './assets/sass/style.scss'])
 			.pipe(sass.sync({outputStyle: 'compressed'}).on('error', sass.logError))
 			.pipe(livereload())
 			.pipe(gulp.dest('./'));
@@ -59,7 +48,7 @@ gulp.task('watch', function () {
 	      livereload.changed(file.path);
 	  });
 	gulp.watch('./assets/sass/**/*.scss', ['sass']);
-	gulp.watch('./assets/js/**/*.js', ['scripts']);
+	gulp.watch('./assets/js/**/*.js');
 });
 
 gulp.task('default', ['sass', 'scripts', 'watch']);

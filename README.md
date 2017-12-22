@@ -1,5 +1,5 @@
-## Crown Starter Theme
-Oh hey, didn't see you there. I'm Starter, an awesome theme for scaling up Crown sites in no time at all. I don't have much in the way of style, but there's plenty going on...
+## Starter Theme
+Oh hey, didn't see you there. I'm Starter, an awesome theme for scaling up sites in no time at all. I don't have much in the way of style, but there's plenty going on...
 
 Ok seriously, think of this starter theme more as a library of functions and API's then a full-featured themes. It's a good starting point when building a simple WordPress theme that needs to integrate with various Random House systems. None of the libraries included are entirely feature complete, but have some great helpers for building out themes quickly.
 
@@ -18,7 +18,7 @@ When you are ready to get started, run:
 
 ```
 gulp
-````
+```
 
 This will compile everything and start watching files for changes. The one exception to that is the SVG icon system (covered later). If you add any SVGs, you will need to run the icon task:
 
@@ -71,9 +71,6 @@ The `helpers.php` file includes common functions abstracted so they can be used 
     base_pagination( $current, $total, $format )
 This is really just an abstraction of [paginate_links](https://codex.wordpress.org/Function_Reference/paginate_links), but can be useful for generating pagination on dynamically created pages, or pages stitched up from external API results.
 
-    generate_buy_button( $isbn, $format )
-The generate_buy_button function will automatically create a "Buy Now" button which populates a dropdown with retailer links. Pass through the isbn of the title, and format (Paperback, Hardcover, Audio CD, Audio Download, or Ebook) and you will be returned the dropdown. The retailer links that are populated are controlled in get_all_retailer_links.
-
     filter_excerpt( $content )
 Enable this if you want to filter out certain tags (like images, or tables) from a piece of content.
 
@@ -89,57 +86,3 @@ You only have to specify the filename as the first variable, since it searches f
     echo $this['foo']
 
 Which would return "bar".
-
-#### lib/api/
-The API class is pretty complex, but it can be used to call the PRH API. Make sure to go into `class.randomhouse.php` and populate the proper API keys, division and imprint filters, and custom functionality there. Definitely a work in progress.
-
-A basic call looks like this
-    
-    $args = array(
-    	  'categories' => array( 33333, 33334),
-          'params' => array(
-                 'rows' => '12',
-                 'start' => '12'
-          	)
-    	)
-    $get_books = new RandomHouse
-    $all_books = $get_books->books
-
-Which will return a list of 12 books with a certain category ID, starting from book 12.
-
-All data is called from the PRH API and then passed through to the `class.randomhouse.utils.php` file which prepares the data for output. This basically means iterating through an array of data and outputting it in a consistent format that can be used in templates. For instance, with the above call, we can then use this in a template:
-
-    <?php foreach( $all_books as $book ) { ?>
-        <h1><a href="<?php echo $book->seoFriendlyUrl; ?>"><?php echo $book->title; ?></a></h1>
-        <h2>By <?php echo $book->author; ?>
-        <p><?php echo $book->description; ?>
-    <?php } ?>
-
-To make things a bit easier, there is also a function in the main API class to grab a request from the Google Books API. Not much has been done with this yet, but it should be used to normalize responses across APIs.
-
-### Email
-The Email class has a few different components throughout this theme. These all have to do with integrating with Experian to create simple email subscription forms and preference centers. This is probably the library that is in its most unfinished state, and both the back-end and front-end code will need to be tweaked to suit your needs.
-
-#### lib/email
-The back-end consists of a basic `RHAjax` class which can be used to set-up AJAX calls, which process a form's data and submits it to the Experian API on the server instead of the client.
-
-I'd recommend looking through this file for full details, but there are two types of calls in there, "newsletter" and "preferences", which make different calls to the API. The way to actually set this up is to pass an instance of the class to a variable, and then pass that variable to a WordPress admin ajax action, like so:
-
-    $newsletter_request = new RHAjax('newsletter', 'rh-newsletter-signup');
-    add_action( 'wp_ajax_newsletter_signup', array($newsletter_request, 'run') );
-    add_action( 'wp_ajax_nopriv_newsletter_signup', array($newsletter_request, 'run') );
-
-Be sure to go through the class and set the program ID, site ID and other data that will be specific from site to site. These are stored in top-level protected variables.
-
-#### assets/js/newsletter.js + assets/js/preferences.js
-To match the back-end requests, there are a couple of Javascript files which hook into basic forms located in the includes/templates section of this theme.
-
-These javascript files will grab the necessary information from these forms and then pass it to the back-end class through the ajax action to be processed and sent to Experian.
-
-To validate forms, [validate.js](http://rickharrison.github.io/validate.js/) is used and added to the init action of both Javascript files.
-
-The newsletter module in `newsletter.js` sets up the basic functionality and the Preferences module in `preferences.js` simply extends this module and changes functionality for form processing.
-
-Note that these files require the use of jQuery.
-
-MORE TO COME...
