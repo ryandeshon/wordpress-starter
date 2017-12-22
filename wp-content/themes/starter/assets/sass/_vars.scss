@@ -1,0 +1,155 @@
+// Custom Colors:
+$gray-dark:                 #2b2d2e;
+$gray:                      #808080;
+$gray-light:                #B8B8B8;
+$gray-lighter:              #ddd;
+$gray-lightest:             #F0F0F0;
+$black:						          #000;
+$white:						          #FFF;
+
+$brand-primary:             #00A7B5;
+$brand-success:             #5cb85c;
+$brand-info:                #5bc0de;
+$brand-warning:             #f0ad4e;
+$brand-danger:              #d9534f;
+
+// Social Colors
+$twitter: 					#00aced;
+$facebook: 					#3b5998;
+$googleplus: 				#dd4b39;
+$pinterest:				 	#cb2027;
+$linkedin: 					#007bb6;
+$youtube: 					#bb0000;
+$vimeo: 					  #aad450;
+$tumblr: 					  #32506d;
+$instagram: 				#405de6;
+$flickr: 					  #ff0084;
+$dribbble: 					#ea4c89;
+$quora: 					  #a82400;
+$foursquare: 				#0072b1;
+$forrst: 				   	#5B9A68;
+$vk: 						    #45668e;
+$wordpress: 				#21759b;
+$stumbleupon: 		  #EB4823;
+$yahoo: 					  #7B0099;
+$blogger: 					#fb8f3d;
+$soundcloud: 				#ff3a00;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-flex:               false;
+$enable-rounded:            true;
+$enable-shadows:            false;
+$enable-gradients:          false;
+$enable-transitions:        false;
+$enable-hover-media-query:  false;
+$enable-grid-classes:       true;
+
+
+// Links
+//
+// Style anchor elements.
+
+$link-color:                 $brand-primary;
+$link-decoration:            none;
+$link-hover-color:           darken($link-color, 15%);
+$link-hover-decoration:      none;
+
+// Grid breakpoints
+//
+// Define the minimum and maximum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+$grid-breakpoints: (
+  // Extra small screen / phone
+  xs: 0,
+  // Small screen / phone
+  sm: 544px,
+  // Medium screen / tablet
+  md: 768px,
+  // Large screen / desktop
+  lg: 992px,
+  // Extra large screen / wide desktop
+  xl: 1300px
+);
+
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+$container-max-widths: (
+  sm: 576px,
+  md: 720px,
+  lg: 940px,
+  xl: 1300px
+);
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns:               12;
+$grid-gutter-width:          1.618rem; // 40px
+
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+$font-family-sans-serif:     "LudwigPro",sans-serif;
+$font-family-serif:          'FayonGrandePro', serif;
+$font-family-monospace:      Menlo, Monaco, Consolas, "Courier New", monospace;
+$font-family-base:           Helvetica Neue, Helvetica, Arial, sans-serif;
+
+// Pixel value used to responsively scale all typography. Applied to the `<html>` element.
+$font-size-root:             14px;
+
+$font-size-base:             1rem;
+$font-size-lg:               1.25rem;
+$font-size-sm:               .875rem;
+$font-size-xs:               .75rem;
+
+$font-size-h1:               4rem;
+$font-size-h2:               3rem;
+$font-size-h3:               2.5rem;
+$font-size-h4:               1.5rem;
+$font-size-h5:               1rem;
+$font-size-h6:               .8rem;
+
+$display1-size:               6rem;
+$display2-size:               5.5rem;
+$display3-size:               4.5rem;
+$display4-size:               3.5rem;
+
+$display1-weight:             300;
+$display2-weight:             300;
+$display3-weight:             300;
+$display4-weight:             300;
+
+$line-height:                1.5;
+
+$headings-font-family:       $font-family-sans-serif;
+$headings-font-weight:       500;
+$headings-line-height:       1.1;
+$headings-color:             inherit;
+
+$lead-font-size:             1.25rem;
+$lead-font-weight:           300;
+
+$text-muted:                  $gray-light;
+
+$abbr-border-color:           $gray-light;
+
+$blockquote-small-color:      $gray-light;
+$blockquote-font-size:        ($font-size-base * 1.25);
+$blockquote-border-color:     $gray-lighter;
+
+$hr-border-color:             rgba(0,0,0,.1);
+
+$dt-font-weight:              bold;
+
+$nested-kbd-font-weight:      bold;
+
+$list-inline-padding:         5px;
