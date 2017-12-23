@@ -1,7 +1,9 @@
 <?php
+
+
 // ** MySQL settings ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'starter');
+define('DB_NAME', 'samsungnext.com');
 
 /** MySQL database username */
 define('DB_USER', 'root');
@@ -29,6 +31,16 @@ define('NONCE_SALT',       '2e3k8t^sY7ipNWs&*^7*m:]-knSvd!.y*Z$K-)<6sw@IEqE4La<2
 
 
 $table_prefix = 'wp_';
+
+
+global $memcached_servers;
+$memcached_servers = array(
+    array(
+        '127.0.0.1', // Memcached server IP address
+        11211        // Memcached server port
+    )
+);
+
 
 /* That's all, stop editing! Happy blogging. */
 

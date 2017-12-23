@@ -69,11 +69,6 @@ add_action( 'wp_enqueue_scripts', 'STARTER_scripts' );
 
 
 /**
- * API Library
- */
-require get_template_directory() . '/includes/lib/api/prh.api.php';
-
-/**
  * Custom Template class, for passing locally scoped variables
  */
 require get_template_directory() . '/includes/lib/template/template.php';
