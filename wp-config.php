@@ -1,13 +1,36 @@
 <?php
-// ** MySQL settings ** //
+
+// BEGIN iThemes Security - Do not modify or remove this line
+// iThemes Security Config Details: 2
+define( 'DISALLOW_FILE_EDIT', true ); // Disable File Editor - Security > Settings > WordPress Tweaks > File Editor
+// END iThemes Security - Do not modify or remove this line
+
+/**
+ * The base configurations of the WordPress.
+ *
+ * This file has the following configurations: MySQL settings, Table Prefix,
+ * Secret Keys, and ABSPATH. You can find more information by visiting
+ * {@link http://codex.wordpress.org/Editing_wp-config.php Editing wp-config.php}
+ * Codex page. You can get the MySQL settings from your web host.
+ *
+ * This file is used by the wp-config.php creation script during the
+ * installation. You don't have to use the web site, you can just copy this file
+ * to "wp-config.php" and fill in the values.
+ *
+ * @package WordPress
+ */
+
+// ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'starter');
+ //Added by WP-Cache Manager
+
+define('DB_NAME', 'samsungnext.com');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', 'samsungnext_com');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'root');
+define('DB_PASSWORD', 'rH2QEDVJkp7iSWQC');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -18,23 +41,9 @@ define('DB_CHARSET', 'utf8');
 /** The Database Collate type. Don't change this if in doubt. */
 define('DB_COLLATE', '');
 
-define('AUTH_KEY',         '=y7fyG>bz+TRm]%wSXG5<J_#~k<-qwj=ql*~ ^r5b!hY/0|mbqIM4C,IslSZ$YTE');
-define('SECURE_AUTH_KEY',  'jto(=}@No7I|6D[+rK#<j~j6|NY.)mA F>g(cJ`uG,$+DBXfGyGB+/(MqcXV,Y+?');
-define('LOGGED_IN_KEY',    'XgEO?b,P$1=z|sG5-y;R@+6|:tXPY-rd}H)a4LCD;fL8p0I--E`4cT>]OWJ&7-5@');
-define('NONCE_KEY',        'HTsm-NT+6=0(g{KZpp1~[0||zYPy4kN27hgclIJssg`?J HPkOjPbxJJxE&QS~eo');
-define('AUTH_SALT',        'A^J(h*`RSe,*+4L+$r{FPm?Z5WI[&), LDk|7Za;A;s|,)w?IZ7UsT(VNhRkYj9M');
-define('SECURE_AUTH_SALT', '$nDyYjW?&l99fC|M^VL3G,7AsRoxw0XeWoUw$`%4KHV6})PUp6JFec+/p!glC+K?');
-define('LOGGED_IN_SALT',   'Hk{.kb0-Ao~hEN)zjZYw`m$HvyVUo^&ZJq;]DF9y,D8f1;R[-<K |?QN /s3Ng]/');
-define('NONCE_SALT',       '2e3k8t^sY7ipNWs&*^7*m:]-knSvd!.y*Z$K-)<6sw@IEqE4La<2mbN_s57kVk)U');
-
-
-$table_prefix = 'wp_';
-
-/* That's all, stop editing! Happy blogging. */
-
-/** Absolute path to the WordPress directory. */
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
-
-/** Sets up WordPress vars and included files. */
-require_once(ABSPATH . 'wp-settings.php');
+/**#@+
+ * Authentication Unique Keys and Salts.
+ *
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+                                                                                                                 1,1           Top
