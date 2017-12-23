@@ -5,10 +5,14 @@ var gulp   		= require('gulp'),
 	sass   		= require('gulp-sass'),
 	livereload  = require('gulp-livereload'),
 	svgSprite 	= require('gulp-svg-sprite');
+	jquery		= require('jquery');
 
 var config = {
 	scripts: [
-		'./node_modules/bootstrap/dist/js/bootstrap.js',
+		// Jquery
+		'./node_modules/jquery/dist/jquery.min.js',
+		// Bootstrap 4
+		'./node_modules/bootstrap/dist/js/bootstrap.min.js',
 		// Modernizr
 		'./assets/js/vendor/modernizr/modernizr.shiv.js',
 		// Any Custom Scripts
