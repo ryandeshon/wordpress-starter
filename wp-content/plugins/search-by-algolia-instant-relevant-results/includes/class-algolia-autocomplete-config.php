@@ -1,7 +1,7 @@
 <?php
 
-class Algolia_Autocomplete_Config
-{
+class Algolia_Autocomplete_Config {
+
 	/**
 	 * @var Algolia_Plugin
 	 */
@@ -19,7 +19,7 @@ class Algolia_Autocomplete_Config
 	 */
 	public function get_form_data() {
 		$indices = $this->plugin->get_indices();
-		$config = array();
+		$config  = array();
 
 		$existing_config = $this->get_config();
 		foreach ( $indices as $index ) {
@@ -31,16 +31,18 @@ class Algolia_Autocomplete_Config
 				continue;
 			}
 
-			$default_config = $index->get_default_autocomplete_config();
+			$default_config            = $index->get_default_autocomplete_config();
 			$default_config['enabled'] = false;
 
 			$config[] = $default_config;
 		}
 
-		usort( $config, function( $a, $b ) {
-			return $a['position'] > $b['position'];
-		} );
-		
+		usort(
+			$config, function( $a, $b ) {
+				return $a['position'] > $b['position'];
+			}
+		);
+
 		return $config;
 	}
 
@@ -50,7 +52,7 @@ class Algolia_Autocomplete_Config
 	 * @return mixed
 	 */
 	public function sanitize_form_data( $data ) {
-		
+
 		if ( ! is_array( $data ) ) {
 			return array();
 		}
@@ -66,16 +68,16 @@ class Algolia_Autocomplete_Config
 			}
 
 			$merged_config = array_merge(
-                $index->get_default_autocomplete_config(),
-                array(
-                    'position'        => (int) $config['position'],
-                    'max_suggestions' => (int) $config['max_suggestions'],
-                )
-            );
+				$index->get_default_autocomplete_config(),
+				array(
+					'position'        => (int) $config['position'],
+					'max_suggestions' => (int) $config['max_suggestions'],
+				)
+			);
 
-			if ( isset( $config['label'] ) && !empty( $config['label'] ) ) {
-                $merged_config['label'] = $config['label'];
-            }
+			if ( isset( $config['label'] ) && ! empty( $config['label'] ) ) {
+				$merged_config['label'] = $config['label'];
+			}
 
 			$sanitized[] = $merged_config;
 		}
@@ -84,20 +86,17 @@ class Algolia_Autocomplete_Config
 	}
 
 	/**
-	 * @param array $config
+	 * @param array  $config
 	 * @param string $index_id
 	 *
 	 * @return mixed|void
 	 */
-	private function extract_index_config( array $config, $index_id )
-	{
+	private function extract_index_config( array $config, $index_id ) {
 		foreach ( $config as $entry ) {
 			if ( $index_id === $entry['index_id'] ) {
 				return $entry;
 			}
 		}
-
-		return;
 	}
 
 	/**
@@ -105,33 +104,37 @@ class Algolia_Autocomplete_Config
 	 */
 	public function get_config() {
 		$settings = $this->plugin->get_settings();
-		$config = $settings->get_autocomplete_config();
+		$config   = $settings->get_autocomplete_config();
 		foreach ( $config as $key => &$entry ) {
 			if ( ! isset( $entry['index_id'] ) ) {
 				unset( $config[ $key ] );
 				continue;
 			}
-			
+
 			$index = $this->plugin->get_index( $entry['index_id'] );
 			if ( null === $index ) {
 				unset( $config[ $key ] );
 				continue;
 			}
-            $entry['index_name'] = $index->get_name();
-			$entry['enabled'] = true;
+			$entry['index_name'] = $index->get_name();
+			$entry['enabled']    = true;
 		}
 
 		$config = (array) apply_filters( 'algolia_autocomplete_config', $config );
 
 		// Remove manually disabled indices.
-		$config = array_filter( $config, function( $item ) {
-			return (bool) $item['enabled'];
-		} );
+		$config = array_filter(
+			$config, function( $item ) {
+				return (bool) $item['enabled'];
+			}
+		);
 
 		// Sort the indices.
-		usort( $config, function( $a, $b ) {
-			return $a['position'] > $b['position'];
-		} );
+		usort(
+			$config, function( $a, $b ) {
+				return $a['position'] > $b['position'];
+			}
+		);
 
 		return $config;
 	}

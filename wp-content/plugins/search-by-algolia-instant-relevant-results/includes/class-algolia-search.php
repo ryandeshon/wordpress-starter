@@ -1,16 +1,11 @@
 <?php
 
-class Algolia_Search
-{
+class Algolia_Search {
+
 	/**
 	 * @var int
 	 */
 	private $nb_hits;
-
-	/**
-	 * @var array
-	 */
-	private $ranked_post_ids;
 
 	/**
 	 * @var Algolia_Index
@@ -18,7 +13,7 @@ class Algolia_Search
 	private $index;
 
 	/**
-	 * @param Algolia_Index  $index
+	 * @param Algolia_Index $index
 	 */
 	public function __construct( Algolia_Index $index ) {
 		$this->index = $index;
@@ -56,27 +51,27 @@ class Algolia_Search
 
 		$posts_per_page = (int) get_option( 'posts_per_page' );
 
-        $params = apply_filters( 'algolia_search_params', array(
-            'attributesToRetrieve' => 'post_id',
-            'hitsPerPage'          => $posts_per_page,
-            'page'                 => $current_page - 1, // Algolia pages are zero indexed.
-        ) );
+		$params = apply_filters(
+			'algolia_search_params', array(
+				'attributesToRetrieve' => 'post_id',
+				'hitsPerPage'          => $posts_per_page,
+				'page'                 => $current_page - 1, // Algolia pages are zero indexed.
+			)
+		);
 
-        $order_by = apply_filters( 'algolia_search_order_by', null );
-        $order = apply_filters( 'algolia_search_order', 'desc' );
+		$order_by = apply_filters( 'algolia_search_order_by', null );
+		$order    = apply_filters( 'algolia_search_order', 'desc' );
 
-        try {
-            $results = $this->index->search( $query->query['s'], $params, $order_by, $order );
-        } catch ( \AlgoliaSearch\AlgoliaException $exception ) {
-            error_log( $exception->getMessage() );
+		try {
+			$results = $this->index->search( $query->query['s'], $params, $order_by, $order );
+		} catch ( \AlgoliaSearch\AlgoliaException $exception ) {
+			error_log( $exception->getMessage() );
 
-            return;
-        }
+			return;
+		}
 
-		add_filter( 'the_posts', array( $this, 'the_posts' ), 10, 2 );
 		add_filter( 'found_posts', array( $this, 'found_posts' ), 10, 2 );
 		add_filter( 'posts_search', array( $this, 'posts_search' ), 10, 2 );
-		add_filter( 'posts_clauses', array( $this, 'posts_clauses' ), 10, 2 );
 
 		// Store the total number of its, so that we can hook into the `found_posts`.
 		// This is useful for pagination.
@@ -87,61 +82,36 @@ class Algolia_Search
 			$post_ids[] = $result['post_id'];
 		}
 
-		$this->ranked_post_ids = $post_ids;
+		// Make sure there are not results by tricking WordPress in trying to find
+		// a non existing post ID.
+		// Otherwise, the query returns all the results.
+		if ( empty( $post_ids ) ) {
+			$post_ids = array( 0 );
+		}
 
 		$query->set( 'posts_per_page', $posts_per_page );
 		$query->set( 'offset', 0 );
 
 		$post_types = 'any';
 		if ( isset( $_GET['post_type'] ) ) {
-		    $post_type = get_post_type_object( $_GET['post_type'] );
-		    if (null !== $post_type) {
-		        $post_types = $post_type->name;
-            }
-        }
+			$post_type = get_post_type_object( $_GET['post_type'] );
+			if ( null !== $post_type ) {
+				$post_types = $post_type->name;
+			}
+		}
 
 		$query->set( 'post_type', $post_types );
 		$query->set( 'post__in', $post_ids );
+		$query->set( 'orderby', 'post__in' );
 
 		// Todo: this actually still excludes trash and auto-drafts.
 		$query->set( 'post_status', 'any' );
 	}
 
 	/**
-	 * This hook orders the posts according to Algolia's ranking instead
-	 * of the MySQL default ranking.
-	 *
-	 * @param array    $posts
-	 * @param WP_Query $query
-	 *
-	 * @return array
-	 */
-	public function the_posts( array $posts, WP_Query $query ) {
-		if ( ! $this->should_filter_query( $query ) ) {
-			return $posts;
-		}
-
-		$ranked_posts = array();
-
-		$ranked_post_ids = array_reverse( $this->ranked_post_ids );
-		do {
-			$ranked_post_id = array_pop( $ranked_post_ids );
-			foreach ( $posts as $post ) {
-				// Todo: This could be optimized.
-				if ( $ranked_post_id === $post->ID ) {
-					$ranked_posts[] = $post;
-					break;
-				}
-			}
-		} while ( ! empty( $ranked_post_ids ) );
-
-		return $ranked_posts;
-	}
-
-	/**
 	 * This hook returns the actual real number of results available in Algolia.
 	 *
-	 * @param int $found_posts
+	 * @param int      $found_posts
 	 * @param WP_Query $query
 	 *
 	 * @return int
@@ -156,31 +126,12 @@ class Algolia_Search
 	 * We don't want to filter by anything but the actual list of post_ids resulting
 	 * from the Algolia search.
 	 *
-	 * @param string $search
+	 * @param string   $search
 	 * @param WP_Query $query
 	 *
 	 * @return string
 	 */
 	public function posts_search( $search, WP_Query $query ) {
 		return $this->should_filter_query( $query ) ? '' : $search;
-	}
-
-	/**
-	 * Removes remaining unused SQL pieces.
-	 *
-	 * @param array $pieces
-	 * @param WP_Query $query
-	 *
-	 * @return mixed
-	 */
-	public function posts_clauses( $pieces, WP_Query $query ) {
-		if ( ! $this->should_filter_query( $query ) ) {
-			return $pieces;
-		}
-
-		// We don't care about MySQL ordering. We will need to re-order with Algolia's ranking anyway.
-		$pieces['orderby'] = '';
-
-		return $pieces;
 	}
 }
