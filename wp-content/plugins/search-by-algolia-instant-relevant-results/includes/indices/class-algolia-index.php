@@ -160,7 +160,8 @@ abstract class Algolia_Index {
 			$records = $this->get_records( $item );
 			do_action( 'algolia_after_get_records', $item );
 
-			return $this->update_records( $item, $records );
+			$this->update_records( $item, $records );
+			return;
 		}
 
 		$this->delete_item( $item );
@@ -186,6 +187,7 @@ abstract class Algolia_Index {
 	 */
 	protected function update_records( $item, array $records ) {
 		if ( empty( $records ) ) {
+			$this->delete_item( $item );
 			return;
 		}
 
@@ -242,6 +244,7 @@ abstract class Algolia_Index {
 		$records = array();
 		foreach ( $items as $item ) {
 			if ( ! $this->should_index( $item ) ) {
+				$this->delete_item( $item );
 				continue;
 			}
 			do_action( 'algolia_before_get_records', $item );

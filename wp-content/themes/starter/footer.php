@@ -1,20 +1,31 @@
 <?php
 /**
- * The template for displaying the footer.
+ * The template for displaying the footer
  *
- * Contains the closing of the div and all content after.
+ * Contains the closing of the #content div and all content after
  *
  * @package Starter
  */
-
 ?>
+		</div><!-- .wrapper -->
+	</div><!-- .site-content -->
+	
+	<?php	get_template_part( 'template-parts/testimonial/display', 'testimonial' );
+	?>
+	<?php get_template_part( 'template-parts/footer/footer', 'instagram' ); ?>
+	<footer id="colophon" class="site-footer" role="contentinfo">
 
-	</div>
+		<?php get_template_part( 'template-parts/footer/footer', 'widgets' ); ?>
 
-	<footer class="footer" role="contentinfo">
-	</footer>
+		<div id="site-generator">
+			<?php get_template_part( 'template-parts/navigation/navigation', 'footer' ); ?>
+
+			<?php get_template_part( 'template-parts/footer/site', 'info' ); ?>
+		</div><!-- #site-generator -->
+
+	</footer><!-- .site-footer -->
+</div><!-- .site -->
 
 <?php wp_footer(); ?>
-
 </body>
 </html>
