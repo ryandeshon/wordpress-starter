@@ -94,7 +94,7 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'hits' ) ); ?>"><?php echo number_format_i18n( '12345' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'hits' ) ); ?>"><?php esc_html_e( 'Pageview Description:', 'jetpack' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'hits' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hits' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['hits'] ); ?>" />
 		</p>
 		<p><?php esc_html_e( 'Hit counter is delayed by up to 60 seconds.', 'jetpack' ); ?></p>
@@ -150,7 +150,7 @@ class Jetpack_Blog_Stats_Widget extends WP_Widget {
 				isset( $instance['hits'] ) ? esc_html( $instance['hits'] ) : ''
 			);
 		} else {
-			esc_html_e( 'No hits.', 'jetpack' );
+			esc_html_e( 'There was an issue retrieving stats. Please try again later.', 'jetpack' );
 		}
 
 		echo $args['after_widget'];

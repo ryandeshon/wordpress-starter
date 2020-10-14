@@ -17,14 +17,25 @@ class Jetpack_JSON_API_Get_Post_Backup_Endpoint extends Jetpack_JSON_API_Endpoin
 	}
 
 	protected function result() {
+		global $wpdb;
+
+		// Disable Sync as this is a read-only operation and triggered by sync activity.
+		\Automattic\Jetpack\Sync\Actions::mark_sync_read_only();
+
 		$post = get_post( $this->post_id );
 		if ( empty( $post ) ) {
 			return new WP_Error( 'post_not_found', __( 'Post not found', 'jetpack' ), 404 );
 		}
 
+		// Fetch terms associated with this post object
+		$terms = $wpdb->get_results( $wpdb->prepare(
+			"SELECT term_taxonomy_id, term_order FROM {$wpdb->term_relationships} WHERE object_id = %d;", $post->ID
+		) );
+
 		return array(
-			'post' => (array)$post,
-			'meta' => get_post_meta( $post->ID ),
+			'post'  => (array)$post,
+			'meta'  => get_post_meta( $post->ID ),
+			'terms' => (array)$terms,
 		);
 	}
 

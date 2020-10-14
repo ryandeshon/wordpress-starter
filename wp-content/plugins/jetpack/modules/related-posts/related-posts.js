@@ -1,10 +1,9 @@
-/* jshint onevar: false */
 /* globals related_posts_js_options */
 
 /**
  * Load related posts
  */
-(function($) {
+( function ( $ ) {
 	var jprp = {
 		response: null,
 
@@ -14,19 +13,24 @@
 		 * @param  {string} URL (optional)
 		 * @return {string} Endpoint URL
 		 */
-		getEndpointURL: function( URL ) {
+		getEndpointURL: function ( URL ) {
 			var locationObject,
-				is_customizer = 'undefined' !== typeof wp && wp.customize && wp.customize.settings && wp.customize.settings.url && wp.customize.settings.url.self;
+				is_customizer =
+					'undefined' !== typeof wp &&
+					wp.customize &&
+					wp.customize.settings &&
+					wp.customize.settings.url &&
+					wp.customize.settings.url.self;
 
 			// If we're in Customizer, write the correct URL.
 			if ( is_customizer ) {
-					locationObject = document.createElement( 'a' );
-					locationObject.href = wp.customize.settings.url.self;
+				locationObject = document.createElement( 'a' );
+				locationObject.href = wp.customize.settings.url.self;
 			} else {
 				locationObject = document.location;
 			}
 
-			if ( 'string' === typeof( URL ) && URL.match( /^https?:\/\// ) ) {
+			if ( 'string' === typeof URL && URL.match( /^https?:\/\// ) ) {
 				locationObject = document.createElement( 'a' );
 				locationObject.href = URL;
 			}
@@ -41,7 +45,7 @@
 			}
 
 			var pathname = locationObject.pathname;
-			if ( '/' !== pathname[0] ) {
+			if ( '/' !== pathname[ 0 ] ) {
 				pathname = '/' + pathname;
 			}
 
@@ -52,35 +56,33 @@
 			}
 		},
 
-		getAnchor: function( post, classNames ) {
+		getAnchor: function ( post, classNames ) {
 			var anchor_title = post.title;
-			if ( '' !== ( '' + post.excerpt ) ) {
-				anchor_title += '\n\n' + post.excerpt;
-			}
-
 			var anchor = $( '<a>' );
 
-			anchor.attr({
-				'class': classNames,
-				'href': post.url,
-				'title': anchor_title,
-				'rel': post.rel,
+			anchor.attr( {
+				class: classNames,
+				href: post.url,
+				title: anchor_title,
 				'data-origin': post.url_meta.origin,
-				'data-position': post.url_meta.position
-			});
+				'data-position': post.url_meta.position,
+			} );
+
+			if ( '' !== post.rel ) {
+				anchor.attr( {
+					rel: post.rel,
+				} );
+			}
 
 			var anchor_html = $( '<div>' ).append( anchor ).html();
-			return [
-				anchor_html.substring( 0, anchor_html.length-4 ),
-				'</a>'
-			];
+			return [ anchor_html.substring( 0, anchor_html.length - 4 ), '</a>' ];
 		},
 
-		generateMinimalHtml: function( posts, options ) {
+		generateMinimalHtml: function ( posts, options ) {
 			var self = this;
 			var html = '';
 
-			$.each( posts, function( index, post ) {
+			$.each( posts, function ( index, post ) {
 				var anchor = self.getAnchor( post, 'jp-relatedposts-post-a' );
 				var classes = 'jp-relatedposts-post jp-relatedposts-post' + index;
 
@@ -88,8 +90,20 @@
 					classes += ' ' + post.classes.join( ' ' );
 				}
 
-				html += '<p class="' + classes + '" data-post-id="' + post.id + '" data-post-format="' + post.format + '">';
-				html += '<span class="jp-relatedposts-post-title">' + anchor[0] + post.title + anchor[1] + '</span>';
+				html +=
+					'<p class="' +
+					classes +
+					'" data-post-id="' +
+					post.id +
+					'" data-post-format="' +
+					post.format +
+					'">';
+				html +=
+					'<span class="jp-relatedposts-post-title">' +
+					anchor[ 0 ] +
+					post.title +
+					anchor[ 1 ] +
+					'</span>';
 				if ( options.showDate ) {
 					html += '<span class="jp-relatedposts-post-date">' + post.date + '</span>';
 				}
@@ -98,14 +112,20 @@
 				}
 				html += '</p>';
 			} );
-			return '<div class="jp-relatedposts-items jp-relatedposts-items-minimal jp-relatedposts-' + options.layout + ' ">' + html + '</div>';
+			return (
+				'<div class="jp-relatedposts-items jp-relatedposts-items-minimal jp-relatedposts-' +
+				options.layout +
+				' ">' +
+				html +
+				'</div>'
+			);
 		},
 
-		generateVisualHtml: function( posts, options ) {
+		generateVisualHtml: function ( posts, options ) {
 			var self = this;
 			var html = '';
 
-			$.each( posts, function( index, post ) {
+			$.each( posts, function ( index, post ) {
 				var anchor = self.getAnchor( post, 'jp-relatedposts-post-a' );
 				var classes = 'jp-relatedposts-post jp-relatedposts-post' + index;
 
@@ -119,15 +139,46 @@
 					classes += ' jp-relatedposts-post-thumbs';
 				}
 
-				html += '<div class="' + classes + '" data-post-id="' + post.id + '" data-post-format="' + post.format + '">';
+				html +=
+					'<div class="' +
+					classes +
+					'" data-post-id="' +
+					post.id +
+					'" data-post-format="' +
+					post.format +
+					'">';
 				if ( post.img.src ) {
-					html += anchor[0] + '<img class="jp-relatedposts-post-img" src="' + post.img.src + '" width="' + post.img.width + '" alt="' + post.title + '" />' + anchor[1];
+					html +=
+						anchor[ 0 ] +
+						'<img class="jp-relatedposts-post-img" src="' +
+						post.img.src +
+						'" width="' +
+						post.img.width +
+						'" alt="' +
+						post.img.alt_text +
+						'" />' +
+						anchor[ 1 ];
 				} else {
-					var anchor_overlay = self.getAnchor( post, 'jp-relatedposts-post-a jp-relatedposts-post-aoverlay' );
-					html += anchor_overlay[0] + anchor_overlay[1];
+					var anchor_overlay = self.getAnchor(
+						post,
+						'jp-relatedposts-post-a jp-relatedposts-post-aoverlay'
+					);
+					html += anchor_overlay[ 0 ] + anchor_overlay[ 1 ];
 				}
-				html += '<' + related_posts_js_options.post_heading + ' class="jp-relatedposts-post-title">' + anchor[0] + post.title + anchor[1] + '</' + related_posts_js_options.post_heading + '>';
-				html += '<p class="jp-relatedposts-post-excerpt">' + $( '<p>' ).text( post.excerpt ).html() + '</p>';
+				html +=
+					'<' +
+					related_posts_js_options.post_heading +
+					' class="jp-relatedposts-post-title">' +
+					anchor[ 0 ] +
+					post.title +
+					anchor[ 1 ] +
+					'</' +
+					related_posts_js_options.post_heading +
+					'>';
+				html +=
+					'<p class="jp-relatedposts-post-excerpt">' +
+					$( '<p>' ).text( post.excerpt ).html() +
+					'</p>';
 				if ( options.showDate ) {
 					html += '<p class="jp-relatedposts-post-date">' + post.date + '</p>';
 				}
@@ -136,7 +187,13 @@
 				}
 				html += '</div>';
 			} );
-			return '<div class="jp-relatedposts-items jp-relatedposts-items-visual jp-relatedposts-' + options.layout + ' ">' + html + '</div>';
+			return (
+				'<div class="jp-relatedposts-items jp-relatedposts-items-visual jp-relatedposts-' +
+				options.layout +
+				' ">' +
+				html +
+				'</div>'
+			);
 		},
 
 		/**
@@ -145,8 +202,10 @@
 		 * cut off a line of text in the middle so we need to do some detective
 		 * work.
 		 */
-		setVisualExcerptHeights: function() {
-			var elements = $( '#jp-relatedposts .jp-relatedposts-post-nothumbs .jp-relatedposts-post-excerpt' );
+		setVisualExcerptHeights: function () {
+			var elements = $(
+				'#jp-relatedposts .jp-relatedposts-post-nothumbs .jp-relatedposts-post-excerpt'
+			);
 
 			if ( 0 >= elements.length ) {
 				return;
@@ -156,19 +215,16 @@
 				lineHeight = parseInt( elements.first().css( 'line-height' ), 10 );
 
 			// Show 5 lines of text
-			elements.css(
-				'max-height',
-				( 5 * lineHeight / fontSize ) + 'em'
-			);
+			elements.css( 'max-height', ( 5 * lineHeight ) / fontSize + 'em' );
 		},
 
-		getTrackedUrl: function( anchor ) {
+		getTrackedUrl: function ( anchor ) {
 			var args = 'relatedposts_hit=1';
 			args += '&relatedposts_origin=' + $( anchor ).data( 'origin' );
 			args += '&relatedposts_position=' + $( anchor ).data( 'position' );
 
 			var pathname = anchor.pathname;
-			if ( '/' !== pathname[0] ) {
+			if ( '/' !== pathname[ 0 ] ) {
 				pathname = '/' + pathname;
 			}
 
@@ -179,24 +235,27 @@
 			}
 		},
 
-		cleanupTrackedUrl: function() {
+		cleanupTrackedUrl: function () {
 			if ( 'function' !== typeof history.replaceState ) {
 				return;
 			}
 
-			var cleaned_search = document.location.search.replace( /\brelatedposts_[a-z]+=[0-9]*&?\b/gi, '' );
+			var cleaned_search = document.location.search.replace(
+				/\brelatedposts_[a-z]+=[0-9]*&?\b/gi,
+				''
+			);
 			if ( '?' === cleaned_search ) {
 				cleaned_search = '';
 			}
 			if ( document.location.search !== cleaned_search ) {
 				history.replaceState( {}, document.title, document.location.pathname + cleaned_search );
 			}
-		}
+		},
 	};
 
 	function afterPostsHaveLoaded() {
 		jprp.setVisualExcerptHeights();
-		$( '#jp-relatedposts a.jp-relatedposts-post-a' ).click( function() {
+		$( '#jp-relatedposts a.jp-relatedposts-post-a' ).click( function () {
 			this.href = jprp.getTrackedUrl( this );
 		} );
 	}
@@ -215,7 +274,7 @@
 			return;
 		}
 
-		$.getJSON( endpointURL, function( response ) {
+		$.getJSON( endpointURL, function ( response ) {
 			if ( 0 === response.items.length || 0 === $relatedPosts.length ) {
 				return;
 			}
@@ -238,7 +297,9 @@
 				options.layout = response.layout;
 			}
 
-			html = ! showThumbnails ? jprp.generateMinimalHtml( response.items, options ) : jprp.generateVisualHtml( response.items, options );
+			html = ! showThumbnails
+				? jprp.generateMinimalHtml( response.items, options )
+				: jprp.generateVisualHtml( response.items, options );
 
 			$relatedPosts.append( html );
 			if ( options.showDate ) {
@@ -249,10 +310,10 @@
 		} );
 	}
 
-	$( function() {
+	$( function () {
 		if ( 'undefined' !== typeof wp && wp.customize ) {
 			if ( wp.customize.selectiveRefresh ) {
-				wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function( placement ) {
+				wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function ( placement ) {
 					if ( 'jetpack_relatedposts' === placement.partial.id ) {
 						startRelatedPosts();
 					}
@@ -263,5 +324,4 @@
 			startRelatedPosts();
 		}
 	} );
-
-})(jQuery);
+} )( jQuery );

@@ -1,21 +1,18 @@
-/* jshint onevar:false, smarttabs:true */
-
-( function($) {
-
+( function ( $ ) {
 	function TiledGalleryCollection() {
 		this.galleries = [];
 		this.findAndSetupNewGalleries();
 	}
 
-	TiledGalleryCollection.prototype.findAndSetupNewGalleries = function() {
+	TiledGalleryCollection.prototype.findAndSetupNewGalleries = function () {
 		var self = this;
-		$( '.tiled-gallery.tiled-gallery-unresized' ).each( function() {
+		$( '.tiled-gallery.tiled-gallery-unresized' ).each( function () {
 			self.galleries.push( new TiledGallery( $( this ) ) );
 		} );
 	};
 
-	TiledGalleryCollection.prototype.resizeAll = function() {
-		$.each(this.galleries, function(i, gallery) {
+	TiledGalleryCollection.prototype.resizeAll = function () {
+		$.each( this.galleries, function ( i, gallery ) {
 			gallery.resize();
 		} );
 	};
@@ -36,38 +33,43 @@
 	 * Selector for all resizeable elements inside a Tiled Gallery
 	 */
 
-	TiledGallery.prototype.resizeableElementsSelector = '.gallery-row, .gallery-group, .tiled-gallery-item img';
+	TiledGallery.prototype.resizeableElementsSelector =
+		'.gallery-row, .gallery-group, .tiled-gallery-item img';
 
 	/**
 	 * Story
 	 */
 
-	TiledGallery.prototype.addCaptionEvents = function() {
+	TiledGallery.prototype.addCaptionEvents = function () {
 		// Hide captions
 		this.gallery.find( '.tiled-gallery-caption' ).hide();
 
 		// Add hover effects to bring the caption up and down for each item
 		this.gallery.find( '.tiled-gallery-item' ).hover(
-			function() { $( this ).find( '.tiled-gallery-caption' ).stop(true, true).slideDown( 'fast' ); },
-			function() { $( this ).find( '.tiled-gallery-caption' ).stop(true, true).slideUp( 'fast' ); }
+			function () {
+				$( this ).find( '.tiled-gallery-caption' ).stop( true, true ).slideDown( 'fast' );
+			},
+			function () {
+				$( this ).find( '.tiled-gallery-caption' ).stop( true, true ).slideUp( 'fast' );
+			}
 		);
 	};
 
-	TiledGallery.prototype.getExtraDimension = function( el, attribute, mode ) {
+	TiledGallery.prototype.getExtraDimension = function ( el, attribute, mode ) {
 		if ( mode === 'horizontal' ) {
-			var left = ( attribute === 'border' ) ? 'borderLeftWidth' : attribute + 'Left';
-			var right = ( attribute === 'border' ) ? 'borderRightWidth' : attribute + 'Right';
-			return ( parseInt( el.css( left ), 10 ) || 0 ) +  ( parseInt( el.css( right ), 10 ) || 0 );
+			var left = attribute === 'border' ? 'borderLeftWidth' : attribute + 'Left';
+			var right = attribute === 'border' ? 'borderRightWidth' : attribute + 'Right';
+			return ( parseInt( el.css( left ), 10 ) || 0 ) + ( parseInt( el.css( right ), 10 ) || 0 );
 		} else if ( mode === 'vertical' ) {
-			var top = ( attribute === 'border' ) ? 'borderTopWidth' : attribute + 'Top';
-			var bottom = ( attribute === 'border' ) ? 'borderBottomWidth' : attribute + 'Bottom';
+			var top = attribute === 'border' ? 'borderTopWidth' : attribute + 'Top';
+			var bottom = attribute === 'border' ? 'borderBottomWidth' : attribute + 'Bottom';
 			return ( parseInt( el.css( top ), 10 ) || 0 ) + ( parseInt( el.css( bottom ), 10 ) || 0 );
 		} else {
 			return 0;
 		}
 	};
 
-	TiledGallery.prototype.resize = function() {
+	TiledGallery.prototype.resize = function () {
 		// Resize everything in the gallery based on the ratio of the current content width
 		// to the original content width;
 		var originalWidth = this.gallery.data( 'original-width' );
@@ -89,8 +91,10 @@
 
 			// Take all outer dimensions into account when resizing so that images
 			// scale with constant empty space between them
-			var outerWidth = thisGalleryElement.data( 'original-width' ) + paddingWidth + borderWidth + marginWidth;
-			var outerHeight = thisGalleryElement.data( 'original-height' ) + paddingHeight + borderHeight + marginHeight;
+			var outerWidth =
+				thisGalleryElement.data( 'original-width' ) + paddingWidth + borderWidth + marginWidth;
+			var outerHeight =
+				thisGalleryElement.data( 'original-height' ) + paddingHeight + borderHeight + marginHeight;
 
 			// Subtract margins so that images don't overflow on small browser windows
 			thisGalleryElement
@@ -103,7 +107,11 @@
 	 * Resizing logic
 	 */
 
-	var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+	var requestAnimationFrame =
+		window.requestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.msRequestAnimationFrame;
 
 	function attachResizeInAnimationFrames( tiledGalleries ) {
 		var resizing = false;
@@ -116,21 +124,21 @@
 			}
 		}
 
-		$( window ).resize( function() {
+		$( window ).resize( function () {
 			clearTimeout( resizeTimeout );
 
 			if ( ! resizing ) {
 				requestAnimationFrame( handleFrame );
 			}
 			resizing = true;
-			resizeTimeout = setTimeout( function() {
+			resizeTimeout = setTimeout( function () {
 				resizing = false;
 			}, 15 );
 		} );
 	}
 
 	function attachPlainResize( tiledGalleries ) {
-		$( window ).resize( function() {
+		$( window ).resize( function () {
 			tiledGalleries.resizeAll();
 		} );
 	}
@@ -139,17 +147,17 @@
 	 * Ready, set...
 	 */
 
-	$( document ).ready( function() {
+	$( document ).ready( function () {
 		var tiledGalleries = new TiledGalleryCollection();
 
-		$( 'body' ).on( 'post-load', function( e, maybeResize ) {
+		$( 'body' ).on( 'post-load', function ( e, maybeResize ) {
 			if ( 'string' === typeof maybeResize && 'resize' === maybeResize ) {
 				tiledGalleries.resizeAll();
 			} else {
 				tiledGalleries.findAndSetupNewGalleries();
 			}
 		} );
-		$( document ).on( 'page-rendered.wpcom-newdash', function() {
+		$( document ).on( 'page-rendered.wpcom-newdash', function () {
 			tiledGalleries.findAndSetupNewGalleries();
 		} );
 
@@ -165,12 +173,11 @@
 		}
 
 		if ( 'undefined' !== typeof wp && wp.customize && wp.customize.selectiveRefresh ) {
-			wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function( placement ) {
+			wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function ( placement ) {
 				if ( wp.isJetpackWidgetPlaced( placement, 'gallery' ) ) {
 					tiledGalleries.findAndSetupNewGalleries();
 				}
 			} );
 		}
-	});
-
-})(jQuery);
+	} );
+} )( jQuery );

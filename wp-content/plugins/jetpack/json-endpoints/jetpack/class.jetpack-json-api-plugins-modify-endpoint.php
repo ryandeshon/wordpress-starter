@@ -1,4 +1,7 @@
 <?php
+
+use Automattic\Jetpack\Constants;
+
 new Jetpack_JSON_API_Plugins_Modify_Endpoint(
 	array(
 		'description'          => 'Activate/Deactivate a Plugin on your Jetpack Site, or set automatic updates',
@@ -167,15 +170,15 @@ class Jetpack_JSON_API_Plugins_Modify_Endpoint extends Jetpack_JSON_API_Plugins_
 	}
 
 	protected function autoupdate_on() {
-		$autoupdate_plugins = Jetpack_Options::get_option( 'autoupdate_plugins', array() );
+		$autoupdate_plugins = (array) get_site_option( 'auto_update_plugins', array() );
 		$autoupdate_plugins = array_unique( array_merge( $autoupdate_plugins, $this->plugins ) );
-		Jetpack_Options::update_option( 'autoupdate_plugins', $autoupdate_plugins );
+		update_site_option( 'auto_update_plugins', $autoupdate_plugins );
 	}
 
 	protected function autoupdate_off() {
-		$autoupdate_plugins = Jetpack_Options::get_option( 'autoupdate_plugins', array() );
+		$autoupdate_plugins = (array) get_site_option( 'auto_update_plugins', array() );
 		$autoupdate_plugins = array_diff( $autoupdate_plugins, $this->plugins );
-		Jetpack_Options::update_option( 'autoupdate_plugins', $autoupdate_plugins );
+		update_site_option( 'auto_update_plugins', $autoupdate_plugins );
 	}
 
 	protected function autoupdate_translations_on() {
@@ -245,18 +248,11 @@ class Jetpack_JSON_API_Plugins_Modify_Endpoint extends Jetpack_JSON_API_Plugins_
 	}
 
 	protected function current_user_can( $capability, $plugin = null ) {
-		global $wp_version;
-		if ( version_compare( $wp_version, '4.9-beta2' ) >= 0 ) {
-			if ( $plugin ) {
-				return current_user_can( $capability, $plugin );
-			}
-
-			return current_user_can( $capability );
+		if ( $plugin ) {
+			return current_user_can( $capability, $plugin );
 		}
 
-		// Assume that the user has the activate plugins capability.
-		return current_user_can( 'activate_plugins' );
-
+		return current_user_can( $capability );
 	}
 
 	protected function deactivate() {
@@ -298,7 +294,7 @@ class Jetpack_JSON_API_Plugins_Modify_Endpoint extends Jetpack_JSON_API_Plugins_
 	protected function update() {
 		$query_args = $this->query_args();
 		if ( isset( $query_args['autoupdate'] ) && $query_args['autoupdate'] ) {
-			Jetpack_Constants::set_constant( 'JETPACK_PLUGIN_AUTOUPDATE', true );
+			Constants::set_constant( 'JETPACK_PLUGIN_AUTOUPDATE', true );
 		}
 		wp_clean_plugins_cache();
 		ob_start();

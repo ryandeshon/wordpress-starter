@@ -10,6 +10,7 @@ use Timber\Image\Operation\Retina;
 use Timber\Image\Operation\Letterbox;
 
 use Timber\URLHelper;
+use Timber\PathHelper;
 
 /**
  * Implements the Twig image filters:
@@ -163,7 +164,7 @@ class ImageHelper {
 		 * SVG images are not allowed by default in WordPress, so we have to pass a default mime
 		 * type for SVG images.
 		 */
-		$mime = wp_check_filetype_and_ext( $file_path, basename( $file_path ), array(
+		$mime = wp_check_filetype_and_ext( $file_path, PathHelper::basename( $file_path ), array(
 			'svg' => 'image/svg+xml',
 		) );
 
@@ -206,7 +207,7 @@ class ImageHelper {
     /**
      * Generates a new image by converting the source into WEBP if supported by the server
      *
-     * @param string  $src      a url or path to the image (http://example.org/wp-content/uploads/2014/image.webp) 
+     * @param string  $src      a url or path to the image (http://example.org/wp-content/uploads/2014/image.webp)
      *							or (/wp-content/uploads/2014/image.jpg)
      *							If webp is not supported, a jpeg image will be generated
 	 * @param int     $quality  ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)
@@ -281,7 +282,7 @@ class ImageHelper {
 		if ( URLHelper::is_absolute($local_file) ) {
 			$local_file = URLHelper::url_to_file_system($local_file);
 		}
-		$info = pathinfo($local_file);
+		$info = PathHelper::pathinfo($local_file);
 		$dir = $info['dirname'];
 		$ext = $info['extension'];
 		$filename = $info['filename'];
@@ -307,7 +308,11 @@ class ImageHelper {
 	 */
 	protected static function process_delete_generated_files( $filename, $ext, $dir, $search_pattern, $match_pattern = null ) {
 		$searcher = '/'.$filename.$search_pattern;
-		foreach ( glob($dir.$searcher) as $found_file ) {
+		$files = glob($dir.$searcher);
+		if ( $files === false || empty($files) ) {
+			return;
+		}
+		foreach ( $files as $found_file ) {
 			$pattern = '/'.preg_quote($dir, '/').'\/'.preg_quote($filename, '/').$match_pattern.preg_quote($ext, '/').'/';
 			$match = preg_match($pattern, $found_file);
 			if ( !$match_pattern || $match ) {
@@ -323,7 +328,7 @@ class ImageHelper {
 	 * @return string
 	 */
 	public static function get_server_location( $url ) {
-		// if we're already an absolute dir, just return
+		// if we're already an absolute dir, just return.
 		if ( 0 === strpos($url, ABSPATH) ) {
 			return $url;
 		}
@@ -344,7 +349,7 @@ class ImageHelper {
 		$dir = $upload['path'];
 		$filename = $file;
 		$file = parse_url($file);
-		$path_parts = pathinfo($file['path']);
+		$path_parts = PathHelper::pathinfo($file['path']);
 		$basename = md5($filename);
 		$ext = 'jpg';
 		if ( isset($path_parts['extension']) ) {
@@ -371,16 +376,17 @@ class ImageHelper {
 		$tmp = download_url($file);
 		preg_match('/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches);
 		$file_array = array();
-		$file_array['name'] = basename($matches[0]);
+		$file_array['name'] = PathHelper::basename($matches[0]);
 		$file_array['tmp_name'] = $tmp;
-		// If error storing temporarily, unlink
+		// If error storing temporarily, do not use
 		if ( is_wp_error($tmp) ) {
-			@unlink($file_array['tmp_name']);
 			$file_array['tmp_name'] = '';
 		}
 		// do the validation and storage stuff
-		$locinfo = pathinfo($loc);
+		$locinfo = PathHelper::pathinfo($loc);
 		$file = wp_upload_bits($locinfo['basename'], null, file_get_contents($file_array['tmp_name']));
+		// delete tmp file
+		@unlink($file_array['tmp_name']);
 		return $file['url'];
 	}
 
@@ -428,7 +434,7 @@ class ImageHelper {
 				$tmp = URLHelper::remove_url_component($tmp, WP_CONTENT_DIR);
 			}
 		}
-		$parts = pathinfo($tmp);
+		$parts = PathHelper::pathinfo($tmp);
 		$result['subdir'] = ($parts['dirname'] === '/') ? '' : $parts['dirname'];
 		$result['filename'] = $parts['filename'];
 		$result['extension'] = strtolower($parts['extension']);
@@ -452,10 +458,24 @@ class ImageHelper {
 		return $tmp;
 	}
 
+	/**
+	 * Checks if uploaded image is located in theme.
+	 *
+	 * @param string $path image path.
+	 * @return bool     If the image is located in the theme directory it returns true.
+	 *                  If not or $path doesn't exits it returns false.
+	 */
 	protected static function is_in_theme_dir( $path ) {
-		$root = realpath(get_stylesheet_directory_uri());
-		if ( 0 === strpos($path, $root) ) {
+		$root = realpath(get_stylesheet_directory());
+
+		if ( false === $root ) {
+			return false;
+		}
+
+		if ( 0 === strpos($path, (string) $root) ) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -480,11 +500,10 @@ class ImageHelper {
 		if ( !empty($subdir) ) {
 			$url .= $subdir;
 		}
-		$url .= '/'.$filename;
+		$url = untrailingslashit($url).'/'.$filename;
 		if ( !$absolute ) {
 			$url = str_replace(site_url(), '', $url);
 		}
-		// $url = TimberURLHelper::remove_double_slashes( $url);
 		return $url;
 	}
 
@@ -554,6 +573,13 @@ class ImageHelper {
 		if ( empty($src) ) {
 			return '';
 		}
+
+		$allow_fs_write = apply_filters('timber/allow_fs_write', true);
+
+		if ( $allow_fs_write === false ) {
+			return $src;
+		}
+		
 		$external = false;
 		// if external image, load it first
 		if ( URLHelper::is_external_content($src) ) {

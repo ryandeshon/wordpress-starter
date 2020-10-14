@@ -3,7 +3,7 @@
 
 // ** MySQL settings ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'wordpress-starter');
+define('DB_NAME', 'starter');
 
 /** MySQL database username */
 define('DB_USER', 'root');
