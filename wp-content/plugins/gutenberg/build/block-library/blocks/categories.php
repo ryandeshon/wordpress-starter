@@ -14,7 +14,7 @@
  */
 function gutenberg_render_block_core_categories( $attributes ) {
 	static $block_id = 0;
-	$block_id++;
+	++$block_id;
 
 	$args = array(
 		'echo'         => false,
@@ -22,13 +22,17 @@ function gutenberg_render_block_core_categories( $attributes ) {
 		'orderby'      => 'name',
 		'show_count'   => ! empty( $attributes['showPostCounts'] ),
 		'title_li'     => '',
+		'hide_empty'   => empty( $attributes['showEmpty'] ),
 	);
+	if ( ! empty( $attributes['showOnlyTopLevel'] ) && $attributes['showOnlyTopLevel'] ) {
+		$args['parent'] = 0;
+	}
 
 	if ( ! empty( $attributes['displayAsDropdown'] ) ) {
 		$id                       = 'wp-block-categories-' . $block_id;
 		$args['id']               = $id;
 		$args['show_option_none'] = __( 'Select Category' );
-		$wrapper_markup           = '<div class="%1$s">%2$s</div>';
+		$wrapper_markup           = '<div %1$s><label class="screen-reader-text" for="' . esc_attr( $id ) . '">' . __( 'Categories' ) . '</label>%2$s</div>';
 		$items_markup             = wp_dropdown_categories( $args );
 		$type                     = 'dropdown';
 
@@ -42,16 +46,16 @@ function gutenberg_render_block_core_categories( $attributes ) {
 			);
 		}
 	} else {
-		$wrapper_markup = '<ul class="%1$s">%2$s</ul>';
+		$wrapper_markup = '<ul %1$s>%2$s</ul>';
 		$items_markup   = wp_list_categories( $args );
 		$type           = 'list';
 	}
 
-	$class = "wp-block-categories-{$type}";
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => "wp-block-categories-{$type}" ) );
 
 	return sprintf(
 		$wrapper_markup,
-		esc_attr( $class ),
+		$wrapper_attributes,
 		$items_markup
 	);
 }
@@ -70,12 +74,12 @@ function gutenberg_build_dropdown_script_block_core_categories( $dropdown_id ) {
 	/* <![CDATA[ */
 	( function() {
 		var dropdown = document.getElementById( '<?php echo esc_js( $dropdown_id ); ?>' );
-		function onCatChange() {
+		function gutenberg_onCatChange() {
 			if ( dropdown.options[ dropdown.selectedIndex ].value > 0 ) {
-				location.href = "<?php echo home_url(); ?>/?cat=" + dropdown.options[ dropdown.selectedIndex ].value;
+				location.href = "<?php echo esc_url( home_url() ); ?>/?cat=" + dropdown.options[ dropdown.selectedIndex ].value;
 			}
 		}
-		dropdown.onchange = onCatChange;
+		dropdown.onchange = gutenberg_onCatChange;
 	})();
 	/* ]]> */
 	</script>

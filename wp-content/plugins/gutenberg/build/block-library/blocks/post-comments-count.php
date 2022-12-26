@@ -23,9 +23,10 @@ function gutenberg_render_block_core_post_comments_count( $attributes, $content,
 		$classes .= 'has-text-align-' . $attributes['textAlign'];
 	}
 
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $classes ) );
 	return sprintf(
-		'<div class="%1$s">%2$s</div>',
-		esc_attr( $classes ),
+		'<div %1$s>%2$s</div>',
+		$wrapper_attributes,
 		get_comments_number( $block->context['postId'] )
 	);
 }
@@ -37,11 +38,6 @@ function gutenberg_register_block_core_post_comments_count() {
 	register_block_type_from_metadata(
 		__DIR__ . '/post-comments-count',
 		array(
-			'attributes'      => array(
-				'className' => array(
-					'type' => 'string',
-				),
-			),
 			'render_callback' => 'gutenberg_render_block_core_post_comments_count',
 		)
 	);

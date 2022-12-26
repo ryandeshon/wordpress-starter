@@ -2,11 +2,9 @@
 /**
  * REST API endpoint for the Gathering Tweetstorms block.
  *
- * @package Jetpack
+ * @package automattic/jetpack
  * @since 8.7.0
  */
-
-use Automattic\Jetpack\Connection\Client;
 
 /**
  * Tweetstorm gatherer.
@@ -27,12 +25,12 @@ class WPCOM_REST_API_V2_Endpoint_Tweetstorm_Gather extends WP_REST_Controller {
 			$this->is_wpcom = true;
 
 			if ( ! class_exists( 'WPCOM_Gather_Tweetstorm' ) ) {
-				\jetpack_require_lib( 'gather-tweetstorm' );
+				\require_lib( 'gather-tweetstorm' );
 			}
 		}
 
 		if ( ! class_exists( 'Jetpack_Tweetstorm_Helper' ) ) {
-			\jetpack_require_lib( 'class-jetpack-tweetstorm-helper' );
+			require_once JETPACK__PLUGIN_DIR . '_inc/lib/class-jetpack-tweetstorm-helper.php';
 		}
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
@@ -58,7 +56,7 @@ class WPCOM_REST_API_V2_Endpoint_Tweetstorm_Gather extends WP_REST_Controller {
 				'private_site_security_settings' => array(
 					'allow_blog_token_access' => true,
 				),
-				'permission_callback'            => '__return_true',
+				'permission_callback'            => array( 'Jetpack_Tweetstorm_Helper', 'permissions_check' ),
 			)
 		);
 	}

@@ -1,1 +1,218 @@
-this.wp=this.wp||{},this.wp.dataControls=function(t){var e={};function r(n){if(e[n])return e[n].exports;var o=e[n]={i:n,l:!1,exports:{}};return t[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}return r.m=t,r.c=e,r.d=function(t,e,n){r.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},r.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},r.t=function(t,e){if(1&e&&(t=r(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var o in t)r.d(n,o,function(e){return t[e]}.bind(null,o));return n},r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,"a",e),e},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},r.p="",r(r.s=378)}({121:function(t,e,r){"use strict";r.d(e,"a",(function(){return o}));var n=r(96);function o(t,e){if(t){if("string"==typeof t)return Object(n.a)(t,e);var r=Object.prototype.toString.call(t).slice(8,-1);return"Object"===r&&t.constructor&&(r=t.constructor.name),"Map"===r||"Set"===r?Array.from(r):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?Object(n.a)(t,e):void 0}}},127:function(t,e,r){"use strict";r.d(e,"a",(function(){return u}));var n=r(96);var o=r(121);function u(t){return function(t){if(Array.isArray(t))return Object(n.a)(t)}(t)||function(t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(t))return Array.from(t)}(t)||Object(o.a)(t)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}},31:function(t,e){!function(){t.exports=this.wp.apiFetch}()},378:function(t,e,r){"use strict";r.r(e),r.d(e,"apiFetch",(function(){return a})),r.d(e,"select",(function(){return i})),r.d(e,"syncSelect",(function(){return f})),r.d(e,"dispatch",(function(){return s})),r.d(e,"controls",(function(){return l}));var n=r(127),o=r(31),u=r.n(o),c=r(4),a=function(t){return{type:"API_FETCH",request:t}};function i(t,e){for(var r=arguments.length,n=new Array(r>2?r-2:0),o=2;o<r;o++)n[o-2]=arguments[o];return{type:"SELECT",storeKey:t,selectorName:e,args:n}}function f(t,e){for(var r=arguments.length,n=new Array(r>2?r-2:0),o=2;o<r;o++)n[o-2]=arguments[o];return{type:"SYNC_SELECT",storeKey:t,selectorName:e,args:n}}function s(t,e){for(var r=arguments.length,n=new Array(r>2?r-2:0),o=2;o<r;o++)n[o-2]=arguments[o];return{type:"DISPATCH",storeKey:t,actionName:e,args:n}}var l={API_FETCH:function(t){var e=t.request;return u()(e)},SELECT:Object(c.createRegistryControl)((function(t){return function(e){var r,o=e.storeKey,u=e.selectorName,c=e.args;return(r=t[t.select(o)[u].hasResolver?"__experimentalResolveSelect":"select"](o))[u].apply(r,Object(n.a)(c))}})),SYNC_SELECT:Object(c.createRegistryControl)((function(t){return function(e){var r,o=e.storeKey,u=e.selectorName,c=e.args;return(r=t.select(o))[u].apply(r,Object(n.a)(c))}})),DISPATCH:Object(c.createRegistryControl)((function(t){return function(e){var r,o=e.storeKey,u=e.actionName,c=e.args;return(r=t.dispatch(o))[u].apply(r,Object(n.a)(c))}}))}},4:function(t,e){!function(){t.exports=this.wp.data}()},96:function(t,e,r){"use strict";function n(t,e){(null==e||e>t.length)&&(e=t.length);for(var r=0,n=new Array(e);r<e;r++)n[r]=t[r];return n}r.d(e,"a",(function(){return n}))}});
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function() { return module['default']; } :
+/******/ 				function() { return module; };
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "__unstableAwaitPromise": function() { return /* binding */ __unstableAwaitPromise; },
+  "apiFetch": function() { return /* binding */ apiFetch; },
+  "controls": function() { return /* binding */ controls; },
+  "dispatch": function() { return /* binding */ dispatch; },
+  "select": function() { return /* binding */ build_module_select; },
+  "syncSelect": function() { return /* binding */ syncSelect; }
+});
+
+;// CONCATENATED MODULE: external ["wp","apiFetch"]
+var external_wp_apiFetch_namespaceObject = window["wp"]["apiFetch"];
+var external_wp_apiFetch_default = /*#__PURE__*/__webpack_require__.n(external_wp_apiFetch_namespaceObject);
+;// CONCATENATED MODULE: external ["wp","data"]
+var external_wp_data_namespaceObject = window["wp"]["data"];
+;// CONCATENATED MODULE: external ["wp","deprecated"]
+var external_wp_deprecated_namespaceObject = window["wp"]["deprecated"];
+var external_wp_deprecated_default = /*#__PURE__*/__webpack_require__.n(external_wp_deprecated_namespaceObject);
+;// CONCATENATED MODULE: ./packages/data-controls/build-module/index.js
+/**
+ * WordPress dependencies
+ */
+
+
+
+/**
+ * Dispatches a control action for triggering an api fetch call.
+ *
+ * @param {Object} request Arguments for the fetch request.
+ *
+ * @example
+ * ```js
+ * import { apiFetch } from '@wordpress/data-controls';
+ *
+ * // Action generator using apiFetch
+ * export function* myAction() {
+ * 	const path = '/v2/my-api/items';
+ * 	const items = yield apiFetch( { path } );
+ * 	// do something with the items.
+ * }
+ * ```
+ *
+ * @return {Object} The control descriptor.
+ */
+
+function apiFetch(request) {
+  return {
+    type: 'API_FETCH',
+    request
+  };
+}
+/**
+ * Control for resolving a selector in a registered data store.
+ * Alias for the `resolveSelect` built-in control in the `@wordpress/data` package.
+ *
+ * @param {Array} args Arguments passed without change to the `@wordpress/data` control.
+ */
+
+function build_module_select() {
+  external_wp_deprecated_default()('`select` control in `@wordpress/data-controls`', {
+    since: '5.7',
+    alternative: 'built-in `resolveSelect` control in `@wordpress/data`'
+  });
+  return external_wp_data_namespaceObject.controls.resolveSelect(...arguments);
+}
+/**
+ * Control for calling a selector in a registered data store.
+ * Alias for the `select` built-in control in the `@wordpress/data` package.
+ *
+ * @param {Array} args Arguments passed without change to the `@wordpress/data` control.
+ */
+
+function syncSelect() {
+  external_wp_deprecated_default()('`syncSelect` control in `@wordpress/data-controls`', {
+    since: '5.7',
+    alternative: 'built-in `select` control in `@wordpress/data`'
+  });
+  return external_wp_data_namespaceObject.controls.select(...arguments);
+}
+/**
+ * Control for dispatching an action in a registered data store.
+ * Alias for the `dispatch` control in the `@wordpress/data` package.
+ *
+ * @param {Array} args Arguments passed without change to the `@wordpress/data` control.
+ */
+
+function dispatch() {
+  external_wp_deprecated_default()('`dispatch` control in `@wordpress/data-controls`', {
+    since: '5.7',
+    alternative: 'built-in `dispatch` control in `@wordpress/data`'
+  });
+  return external_wp_data_namespaceObject.controls.dispatch(...arguments);
+}
+/**
+ * Dispatches a control action for awaiting on a promise to be resolved.
+ *
+ * @param {Object} promise Promise to wait for.
+ *
+ * @example
+ * ```js
+ * import { __unstableAwaitPromise } from '@wordpress/data-controls';
+ *
+ * // Action generator using apiFetch
+ * export function* myAction() {
+ * 	const promise = getItemsAsync();
+ * 	const items = yield __unstableAwaitPromise( promise );
+ * 	// do something with the items.
+ * }
+ * ```
+ *
+ * @return {Object} The control descriptor.
+ */
+
+const __unstableAwaitPromise = function (promise) {
+  return {
+    type: 'AWAIT_PROMISE',
+    promise
+  };
+};
+/**
+ * The default export is what you use to register the controls with your custom
+ * store.
+ *
+ * @example
+ * ```js
+ * // WordPress dependencies
+ * import { controls } from '@wordpress/data-controls';
+ * import { registerStore } from '@wordpress/data';
+ *
+ * // Internal dependencies
+ * import reducer from './reducer';
+ * import * as selectors from './selectors';
+ * import * as actions from './actions';
+ * import * as resolvers from './resolvers';
+ *
+ * registerStore( 'my-custom-store', {
+ * reducer,
+ * controls,
+ * actions,
+ * selectors,
+ * resolvers,
+ * } );
+ * ```
+ * @return {Object} An object for registering the default controls with the
+ * store.
+ */
+
+const controls = {
+  AWAIT_PROMISE: _ref => {
+    let {
+      promise
+    } = _ref;
+    return promise;
+  },
+
+  API_FETCH(_ref2) {
+    let {
+      request
+    } = _ref2;
+    return external_wp_apiFetch_default()(request);
+  }
+
+};
+
+(window.wp = window.wp || {}).dataControls = __webpack_exports__;
+/******/ })()
+;

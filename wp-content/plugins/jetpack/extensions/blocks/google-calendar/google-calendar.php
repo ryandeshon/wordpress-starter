@@ -4,7 +4,7 @@
  *
  * @since 8.3.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\Google_Calendar;
@@ -21,7 +21,7 @@ const BLOCK_NAME   = 'jetpack/' . FEATURE_NAME;
  * registration if we need to.
  */
 function register_block() {
-	jetpack_register_block(
+	Blocks::jetpack_register_block(
 		BLOCK_NAME,
 		array(
 			'render_callback' => __NAMESPACE__ . '\load_assets',
@@ -49,7 +49,7 @@ function load_assets( $attr ) {
 		return '';
 	}
 
-	$sandbox = 'allow-scripts allow-same-origin';
+	$sandbox = 'allow-scripts allow-same-origin allow-popups';
 	if ( Blocks::is_amp_request() ) {
 		$noscript_src = str_replace(
 			'//calendar.google.com/calendar/embed',

@@ -65,43 +65,26 @@ class Admin_Sidebar_Link {
 			return;
 		}
 
-		$new_link = $this->get_new_link();
+		$has_scan    = $this->has_scan();
+		$show_backup = $this->should_show_backup();
+		$url         = Redirect::get_url( 'calypso-backups' );
 
-		// Splice the nav menu item into the Jetpack nav.
-		global $submenu;
-		array_splice( $submenu['jetpack'], $this->get_link_offset(), 0, array( $new_link ) );
-	}
-
-	/**
-	 * Retuns the new link.
-	 *
-	 *  @return array Link array to be added to the sidebar.
-	 */
-	private function get_new_link() {
-		$has_scan   = $this->has_scan();
-		$has_backup = $this->has_backup();
-
-		$url = Redirect::get_url( 'calypso-backups' );
-		if ( $has_scan && ! $has_backup ) {
+		if ( $has_scan && ! $show_backup ) {
 			$menu_label = __( 'Scan', 'jetpack' );
 			$url        = Redirect::get_url( 'calypso-scanner' );
-		} elseif ( ! $has_scan && $has_backup ) {
+		} elseif ( ! $has_scan && $show_backup ) {
 			$menu_label = __( 'Backup', 'jetpack' );
 		} else {
-			// Will be both, as the code won't get this far if neither is true.
+			// Will be both, as the code won't get this far if neither is true (see should_show_link()).
 			$menu_label = __( 'Backup & Scan', 'jetpack' );
 		}
 
-		return array(
-			esc_html( $menu_label ) . ' <span class="dashicons dashicons-external"></span>',
-			'manage_options', // Check permissions here.
-			esc_url( $url ),
-		);
+		add_submenu_page( 'jetpack', $menu_label, esc_html( $menu_label ) . ' <span class="dashicons dashicons-external"></span>', 'manage_options', esc_url( $url ), null, $this->get_link_offset() );
 
 	}
 
 	/**
-	 * We create a menu offset by counting all the pages that have a jetpack_admin_page set as the link.
+	 * We create a menu offset by counting all the pages that have a jetpack_admin_page set as the capability.
 	 *
 	 * This makes it so that the highlight of the pages works as expected. When you click on the Setting or Dashboard.
 	 *
@@ -110,6 +93,11 @@ class Admin_Sidebar_Link {
 	private function get_link_offset() {
 		global $submenu;
 		$offset = 0;
+
+		if ( ! array_key_exists( 'jetpack', $submenu ) ) {
+			return $offset;
+		}
+
 		foreach ( $submenu['jetpack'] as $link ) {
 			if ( 'jetpack_admin_page' !== $link[1] ) {
 				break;
@@ -145,7 +133,29 @@ class Admin_Sidebar_Link {
 			return false;
 		}
 
-		return $this->has_backup() || $this->has_scan();
+		return $this->should_show_scan() || $this->should_show_backup();
+	}
+
+	/**
+	 * Check if we should display the Scan menu item.
+	 *
+	 * It will only be displayed if site has Scan enabled and the stand-alone Protect plugin is not active, because it will have a menu item of its own.
+	 *
+	 * @return boolean
+	 */
+	private function should_show_scan() {
+		return $this->has_scan() && ! $this->has_protect_plugin();
+	}
+
+	/**
+	 * Check if we should display the Backup menu item.
+	 *
+	 * It will only be displayed if site has Backup enabled and the stand-alone Backup plugin is not active, because it will have a menu item of its own.
+	 *
+	 * @return boolean
+	 */
+	private function should_show_backup() {
+		return $this->has_backup() && ! $this->has_backup_plugin();
 	}
 
 	/**
@@ -160,6 +170,15 @@ class Admin_Sidebar_Link {
 	}
 
 	/**
+	 * Detects if Protect plugin is active.
+	 *
+	 * @return boolean
+	 */
+	private function has_protect_plugin() {
+		return class_exists( 'Jetpack_Protect' );
+	}
+
+	/**
 	 * Detects if Backup is enabled.
 	 *
 	 * @return boolean
@@ -168,6 +187,15 @@ class Admin_Sidebar_Link {
 		$this->maybe_refresh_transient_cache();
 		$rewind_state = get_transient( 'jetpack_rewind_state' );
 		return ! $rewind_state || 'unavailable' !== $rewind_state->state;
+	}
+
+	/**
+	 * Detects if Backup plugin is active.
+	 *
+	 * @return boolean
+	 */
+	private function has_backup_plugin() {
+		return class_exists( 'Jetpack_Backup' );
 	}
 
 	/**
@@ -190,5 +218,3 @@ class Admin_Sidebar_Link {
 		$this->schedule_refresh_checked = true;
 	}
 }
-
-

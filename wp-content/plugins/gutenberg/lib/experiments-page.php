@@ -1,6 +1,6 @@
 <?php
 /**
- * Bootstraping the Gutenberg experiments page.
+ * Bootstrapping the Gutenberg experiments page.
  *
  * @package gutenberg
  */
@@ -40,39 +40,71 @@ function gutenberg_initialize_experiments_settings() {
 		'gutenberg_display_experiment_section',
 		'gutenberg-experiments'
 	);
+
 	add_settings_field(
-		'gutenberg-navigation',
-		__( 'Navigation', 'gutenberg' ),
+		'gutenberg-zoomed-out-view',
+		__( 'Zoomed out view ', 'gutenberg' ),
 		'gutenberg_display_experiment_field',
 		'gutenberg-experiments',
 		'gutenberg_experiments_section',
 		array(
-			'label' => __( 'Enable Navigation screen', 'gutenberg' ),
-			'id'    => 'gutenberg-navigation',
+			'label' => __( 'Test a new zoomed out view on the site editor (Warning: The new feature is not ready. You may experience UX issues that are being addressed)', 'gutenberg' ),
+			'id'    => 'gutenberg-zoomed-out-view',
 		)
 	);
+
 	add_settings_field(
-		'gutenberg-full-site-editing',
-		__( 'Full Site Editing', 'gutenberg' ),
+		'gutenberg-off-canvas-navigation-editor',
+		__( 'Off canvas navigation editor ', 'gutenberg' ),
 		'gutenberg_display_experiment_field',
 		'gutenberg-experiments',
 		'gutenberg_experiments_section',
 		array(
-			'label' => __( 'Enable Full Site Editing (Warning: this will replace your theme and cause potentially irreversible changes to your site. We recommend using this only in a development environment.)', 'gutenberg' ),
-			'id'    => 'gutenberg-full-site-editing',
+			'label' => __( 'Test a new "off canvas" editor for navigation block using the block inspector and a tree view of the current menu', 'gutenberg' ),
+			'id'    => 'gutenberg-off-canvas-navigation-editor',
 		)
 	);
+
 	add_settings_field(
-		'gutenberg-full-site-editing-demo',
-		__( 'Full Site Editing Demo Templates', 'gutenberg' ),
+		'gutenberg-color-randomizer',
+		__( 'Color randomizer ', 'gutenberg' ),
 		'gutenberg_display_experiment_field',
 		'gutenberg-experiments',
 		'gutenberg_experiments_section',
 		array(
-			'label' => __( 'Enable Full Site Editing demo templates', 'gutenberg' ),
-			'id'    => 'gutenberg-full-site-editing-demo',
+			'label' => __( 'Test the Global Styles color randomizer; a utility that lets you mix the current color palette pseudo-randomly.', 'gutenberg' ),
+			'id'    => 'gutenberg-color-randomizer',
 		)
 	);
+
+	add_settings_field(
+		'gutenberg-block-inspector-tabs',
+		__( 'Block inspector tabs ', 'gutenberg' ),
+		'gutenberg_display_experiment_field',
+		'gutenberg-experiments',
+		'gutenberg_experiments_section',
+		array(
+			'label' => __( 'Test a new block inspector view splitting settings and appearance controls into tabs', 'gutenberg' ),
+			'id'    => 'gutenberg-block-inspector-tabs',
+		)
+	);
+
+	add_settings_field(
+		'gutenberg-global-styles-custom-css',
+		__( 'Global styles custom css ', 'gutenberg' ),
+		'gutenberg_display_experiment_field',
+		'gutenberg-experiments',
+		'gutenberg_experiments_section',
+		array(
+			'label' => sprintf(
+				/* translators: %s: WordPress documentation for roles and capabilities. */
+				__( 'Test the Global Styles custom CSS field in the site editor. This requires a user to have <a href="%s">unfiltered html capabilities</a>.', 'gutenberg' ),
+				'https://wordpress.org/support/article/roles-and-capabilities/#unfiltered_html'
+			),
+			'id'    => 'gutenberg-global-styles-custom-css',
+		)
+	);
+
 	register_setting(
 		'gutenberg-experiments',
 		'gutenberg-experiments'
@@ -110,25 +142,3 @@ function gutenberg_display_experiment_section() {
 
 	<?php
 }
-
-/**
- * Extends default editor settings with experiments settings.
- *
- * @param array $settings Default editor settings.
- *
- * @return array Filtered editor settings.
- */
-function gutenberg_experiments_editor_settings( $settings ) {
-	$experiments_settings = array(
-		'__experimentalEnableFullSiteEditing'     => gutenberg_is_experiment_enabled( 'gutenberg-full-site-editing' ),
-		'__experimentalEnableFullSiteEditingDemo' => gutenberg_is_experiment_enabled( 'gutenberg-full-site-editing-demo' ),
-	);
-
-	$gradient_presets = current( (array) get_theme_support( 'editor-gradient-presets' ) );
-	if ( false !== $gradient_presets ) {
-		$experiments_settings['gradients'] = $gradient_presets;
-	}
-
-	return array_merge( $settings, $experiments_settings );
-}
-add_filter( 'block_editor_settings', 'gutenberg_experiments_editor_settings' );

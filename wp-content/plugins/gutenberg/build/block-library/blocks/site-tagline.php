@@ -13,12 +13,17 @@
  * @return string The render.
  */
 function gutenberg_render_block_core_site_tagline( $attributes ) {
-	$align_class_name = empty( $attributes['textAlign'] ) ? '' : "has-text-align-{$attributes['textAlign']}";
+	$site_tagline = get_bloginfo( 'description' );
+	if ( ! $site_tagline ) {
+		return;
+	}
+	$align_class_name   = empty( $attributes['textAlign'] ) ? '' : "has-text-align-{$attributes['textAlign']}";
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $align_class_name ) );
 
 	return sprintf(
-		'<p class="%1$s">%2$s</p>',
-		esc_attr( $align_class_name ),
-		get_bloginfo( 'description' )
+		'<p %1$s>%2$s</p>',
+		$wrapper_attributes,
+		$site_tagline
 	);
 }
 

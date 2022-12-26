@@ -1,2 +1,732 @@
-this.wp=this.wp||{},this.wp.mediaUtils=function(e){var t={};function r(n){if(t[n])return t[n].exports;var i=t[n]={i:n,l:!1,exports:{}};return e[n].call(i.exports,i,i.exports,r),i.l=!0,i.exports}return r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)r.d(n,i,function(t){return e[t]}.bind(null,i));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=415)}({0:function(e,t){!function(){e.exports=this.wp.element}()},1:function(e,t){!function(){e.exports=this.wp.i18n}()},13:function(e,t){!function(){e.exports=this.regeneratorRuntime}()},2:function(e,t){!function(){e.exports=this.lodash}()},31:function(e,t){!function(){e.exports=this.wp.apiFetch}()},40:function(e,t){!function(){e.exports=this.wp.blob}()},415:function(e,t,r){"use strict";function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function o(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function a(e,t){return(a=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function l(e){return(l="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function s(e,t){return!t||"object"!==l(t)&&"function"!=typeof t?o(e):t}function u(e){return(u=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}r.r(t),r.d(t,"MediaUpload",(function(){return v})),r.d(t,"uploadMedia",(function(){return U}));var c=r(2),f=r(0),p=r(1);function d(e){var t=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(e){return!1}}();return function(){var r,n=u(e);if(t){var i=u(this).constructor;r=Reflect.construct(n,arguments,i)}else r=n.apply(this,arguments);return s(this,r)}}var m=window.wp,y=[],b=function(e){return Object(c.pick)(e,["sizes","mime","type","subtype","id","url","alt","link","caption"])},h=function(e){return m.media.query({order:"ASC",orderby:"post__in",post__in:e,posts_per_page:-1,query:!0,type:"image"})},v=function(e){!function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&a(e,t)}(u,e);var t,r,l,s=d(u);function u(e){var t,r=e.allowedTypes,i=e.gallery,a=void 0!==i&&i,l=e.unstableFeaturedImageFlow,c=void 0!==l&&l,f=e.modalClass,d=e.multiple,y=void 0!==d&&d,b=e.title,h=void 0===b?Object(p.__)("Select or Upload Media"):b;if(n(this,u),(t=s.apply(this,arguments)).openModal=t.openModal.bind(o(t)),t.onOpen=t.onOpen.bind(o(t)),t.onSelect=t.onSelect.bind(o(t)),t.onUpdate=t.onUpdate.bind(o(t)),t.onClose=t.onClose.bind(o(t)),a)t.buildAndSetGalleryFrame();else{var v={title:h,multiple:y};r&&(v.library={type:r}),t.frame=m.media(v)}return f&&t.frame.$el.addClass(f),c&&t.buildAndSetFeatureImageFrame(),t.initializeListeners(),t}return t=u,(r=[{key:"initializeListeners",value:function(){this.frame.on("select",this.onSelect),this.frame.on("update",this.onUpdate),this.frame.on("open",this.onOpen),this.frame.on("close",this.onClose)}},{key:"buildAndSetGalleryFrame",value:function(){var e=this.props,t=e.addToGallery,r=void 0!==t&&t,n=e.allowedTypes,i=e.multiple,o=void 0!==i&&i,a=e.value,l=void 0===a?y:a;if(l!==this.lastGalleryValue){var s;this.lastGalleryValue=l,this.frame&&this.frame.remove(),s=r?"gallery-library":l&&l.length?"gallery-edit":"gallery",this.GalleryDetailsMediaFrame||(this.GalleryDetailsMediaFrame=m.media.view.MediaFrame.Post.extend({galleryToolbar:function(){var e=this.state().get("editing");this.toolbar.set(new m.media.view.Toolbar({controller:this,items:{insert:{style:"primary",text:e?m.media.view.l10n.updateGallery:m.media.view.l10n.insertGallery,priority:80,requires:{library:!0},click:function(){var e=this.controller,t=e.state();e.close(),t.trigger("update",t.get("library")),e.setState(e.options.state),e.reset()}}}}))},editState:function(){var e=this.state("gallery").get("selection"),t=new m.media.view.EditImage({model:e.single(),controller:this}).render();this.content.set(t),t.loadEditor()},createStates:function(){this.on("toolbar:create:main-gallery",this.galleryToolbar,this),this.on("content:render:edit-image",this.editState,this),this.states.add([new m.media.controller.Library({id:"gallery",title:m.media.view.l10n.createGalleryTitle,priority:40,toolbar:"main-gallery",filterable:"uploaded",multiple:"add",editable:!1,library:m.media.query(Object(c.defaults)({type:"image"},this.options.library))}),new m.media.controller.EditImage({model:this.options.editImage}),new m.media.controller.GalleryEdit({library:this.options.selection,editing:this.options.editing,menu:"gallery",displaySettings:!1,multiple:!0}),new m.media.controller.GalleryAdd])}}));var u=h(l),f=new m.media.model.Selection(u.models,{props:u.props.toJSON(),multiple:o});this.frame=new this.GalleryDetailsMediaFrame({mimeType:n,state:s,multiple:o,selection:f,editing:!(!l||!l.length)}),m.media.frame=this.frame,this.initializeListeners()}}},{key:"buildAndSetFeatureImageFrame",value:function(){var e=m.media.view.MediaFrame.Select.extend({featuredImageToolbar:function(e){this.createSelectToolbar(e,{text:m.media.view.l10n.setFeaturedImage,state:this.options.state})},editState:function(){var e=this.state("featured-image").get("selection"),t=new m.media.view.EditImage({model:e.single(),controller:this}).render();this.content.set(t),t.loadEditor()},createStates:function(){this.on("toolbar:create:featured-image",this.featuredImageToolbar,this),this.on("content:render:edit-image",this.editState,this),this.states.add([new m.media.controller.FeaturedImage,new m.media.controller.EditImage({model:this.options.editImage})])}}),t=h(this.props.value),r=new m.media.model.Selection(t.models,{props:t.props.toJSON()});this.frame=new e({mimeType:this.props.allowedTypes,state:"featured-image",multiple:this.props.multiple,selection:r,editing:!!this.props.value}),m.media.frame=this.frame}},{key:"componentWillUnmount",value:function(){this.frame.remove()}},{key:"onUpdate",value:function(e){var t=this.props,r=t.onSelect,n=t.multiple,i=void 0!==n&&n,o=this.frame.state(),a=e||o.get("selection");a&&a.models.length&&r(i?a.models.map((function(e){return b(e.toJSON())})):b(a.models[0].toJSON()))}},{key:"onSelect",value:function(){var e=this.props,t=e.onSelect,r=e.multiple,n=void 0!==r&&r,i=this.frame.state().get("selection").toJSON();t(n?i:i[0])}},{key:"onOpen",value:function(){if(this.updateCollection(),this.props.value){if(!this.props.gallery){var e=this.frame.state().get("selection");Object(c.castArray)(this.props.value).forEach((function(t){e.add(m.media.attachment(t))}))}h(Object(c.castArray)(this.props.value)).more()}}},{key:"onClose",value:function(){var e=this.props.onClose;e&&e()}},{key:"updateCollection",value:function(){var e=this.frame.content.get();if(e&&e.collection){var t=e.collection;t.toArray().forEach((function(e){return e.trigger("destroy",e)})),t.mirroring._hasMore=!0,t.more()}}},{key:"openModal",value:function(){this.props.gallery&&this.buildAndSetGalleryFrame(),this.frame.open()}},{key:"render",value:function(){return this.props.render({open:this.openModal})}}])&&i(t.prototype,r),l&&i(t,l),u}(f.Component),g=r(13),O=r.n(g);function w(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function S(e,t,r,n,i,o,a){try{var l=e[o](a),s=l.value}catch(e){return void r(e)}l.done?t(s):Promise.resolve(s).then(n,i)}function j(e){return function(){var t=this,r=arguments;return new Promise((function(n,i){var o=e.apply(t,r);function a(e){S(o,n,i,a,l,"next",e)}function l(e){S(o,n,i,a,l,"throw",e)}a(void 0)}))}}function _(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function x(e,t){if(e){if("string"==typeof e)return _(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);return"Object"===r&&e.constructor&&(r=e.constructor.name),"Map"===r||"Set"===r?Array.from(e):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?_(e,t):void 0}}function E(e){return function(e){if(Array.isArray(e))return _(e)}(e)||function(e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e))return Array.from(e)}(e)||x(e)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function T(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var r=[],n=!0,i=!1,o=void 0;try{for(var a,l=e[Symbol.iterator]();!(n=(a=l.next()).done)&&(r.push(a.value),!t||r.length!==t);n=!0);}catch(e){i=!0,o=e}finally{try{n||null==l.return||l.return()}finally{if(i)throw o}}return r}}(e,t)||x(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}var k=r(31),A=r.n(k),P=r(40);function I(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function M(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?I(Object(r),!0).forEach((function(t){w(e,t,r[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):I(Object(r)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))}))}return e}function F(e,t){var r;if("undefined"==typeof Symbol||null==e[Symbol.iterator]){if(Array.isArray(e)||(r=function(e,t){if(!e)return;if("string"==typeof e)return C(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);"Object"===r&&e.constructor&&(r=e.constructor.name);if("Map"===r||"Set"===r)return Array.from(e);if("Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r))return C(e,t)}(e))||t&&e&&"number"==typeof e.length){r&&(e=r);var n=0,i=function(){};return{s:i,n:function(){return n>=e.length?{done:!0}:{done:!1,value:e[n++]}},e:function(e){throw e},f:i}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,a=!0,l=!1;return{s:function(){r=e[Symbol.iterator]()},n:function(){var e=r.next();return a=e.done,e},e:function(e){l=!0,o=e},f:function(){try{a||null==r.return||r.return()}finally{if(l)throw o}}}}function C(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function G(e){return e?Object(c.flatMap)(e,(function(e,t){var r=T(e.split("/"),1)[0],n=t.split("|");return[e].concat(E(Object(c.map)(n,(function(e){return"".concat(r,"/").concat(e)}))))})):e}function U(e){return D.apply(this,arguments)}function D(){return(D=j(O.a.mark((function e(t){var r,n,i,o,a,l,s,u,d,m,y,b,h,v,g,w,S,j,_,x,T,k,A,I,C,U;return O.a.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:r=t.allowedTypes,n=t.additionalData,i=void 0===n?{}:n,o=t.filesList,a=t.maxUploadFileSize,l=t.onError,s=void 0===l?c.noop:l,u=t.onFileChange,d=t.wpAllowedMimeTypes,m=void 0===d?null:d,y=E(o),b=[],h=function(e,t){Object(P.revokeBlobURL)(Object(c.get)(b,[e,"url"])),b[e]=t,u(Object(c.compact)(b))},v=function(e){return!r||Object(c.some)(r,(function(t){return Object(c.includes)(t,"/")?t===e:Object(c.startsWith)(e,"".concat(t,"/"))}))},g=G(m),w=function(e){return Object(c.includes)(g,e)},S=function(e){e.message=[Object(f.createElement)("strong",{key:"filename"},e.file.name),": ",e.message],s(e)},j=[],_=F(y),e.prev=10,_.s();case 12:if((x=_.n()).done){e.next=31;break}if(T=x.value,!g||!T.type||w(T.type)){e.next=17;break}return S({code:"MIME_TYPE_NOT_ALLOWED_FOR_USER",message:Object(p.__)("Sorry, this file type is not permitted for security reasons."),file:T}),e.abrupt("continue",29);case 17:if(!T.type||v(T.type)){e.next=20;break}return S({code:"MIME_TYPE_NOT_SUPPORTED",message:Object(p.__)("Sorry, this file type is not supported here."),file:T}),e.abrupt("continue",29);case 20:if(!(a&&T.size>a)){e.next=23;break}return S({code:"SIZE_ABOVE_LIMIT",message:Object(p.__)("This file exceeds the maximum upload size for this site."),file:T}),e.abrupt("continue",29);case 23:if(!(T.size<=0)){e.next=26;break}return S({code:"EMPTY_FILE",message:Object(p.__)("This file is empty."),file:T}),e.abrupt("continue",29);case 26:j.push(T),b.push({url:Object(P.createBlobURL)(T)}),u(b);case 29:e.next=12;break;case 31:e.next=36;break;case 33:e.prev=33,e.t0=e.catch(10),_.e(e.t0);case 36:return e.prev=36,_.f(),e.finish(36);case 39:k=0;case 40:if(!(k<j.length)){e.next=59;break}return A=j[k],e.prev=42,e.next=45,R(A,i);case 45:I=e.sent,C=M(M({},Object(c.omit)(I,["alt_text","source_url"])),{},{alt:I.alt_text,caption:Object(c.get)(I,["caption","raw"],""),title:I.title.raw,url:I.source_url}),h(k,C),e.next=56;break;case 50:e.prev=50,e.t1=e.catch(42),h(k,null),U=void 0,U=Object(c.has)(e.t1,["message"])?Object(c.get)(e.t1,["message"]):Object(p.sprintf)(// translators: %s: file name
-Object(p.__)("Error while uploading file %s to the media library."),A.name),s({code:"GENERAL",message:U,file:A});case 56:++k,e.next=40;break;case 59:case"end":return e.stop()}}),e,null,[[10,33,36,39],[42,50]])})))).apply(this,arguments)}function R(e,t){var r=new window.FormData;return r.append("file",e,e.name||e.type.replace("/",".")),Object(c.forEach)(t,(function(e,t){return r.append(t,e)})),A()({path:"/wp/v2/media",body:r,method:"POST"})}}});
+/******/ (function() { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function() { return module['default']; } :
+/******/ 				function() { return module; };
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "MediaUpload": function() { return /* reexport */ media_upload; },
+  "uploadMedia": function() { return /* reexport */ uploadMedia; }
+});
+
+;// CONCATENATED MODULE: external ["wp","element"]
+var external_wp_element_namespaceObject = window["wp"]["element"];
+;// CONCATENATED MODULE: external ["wp","i18n"]
+var external_wp_i18n_namespaceObject = window["wp"]["i18n"];
+;// CONCATENATED MODULE: ./packages/media-utils/build-module/components/media-upload/index.js
+/**
+ * WordPress dependencies
+ */
+
+
+const {
+  wp
+} = window;
+const DEFAULT_EMPTY_GALLERY = [];
+/**
+ * Prepares the Featured Image toolbars and frames.
+ *
+ * @return {wp.media.view.MediaFrame.Select} The default media workflow.
+ */
+
+const getFeaturedImageMediaFrame = () => {
+  return wp.media.view.MediaFrame.Select.extend({
+    /**
+     * Enables the Set Featured Image Button.
+     *
+     * @param {Object} toolbar toolbar for featured image state
+     * @return {void}
+     */
+    featuredImageToolbar(toolbar) {
+      this.createSelectToolbar(toolbar, {
+        text: wp.media.view.l10n.setFeaturedImage,
+        state: this.options.state
+      });
+    },
+
+    /**
+     * Handle the edit state requirements of selected media item.
+     *
+     * @return {void}
+     */
+    editState() {
+      const selection = this.state('featured-image').get('selection');
+      const view = new wp.media.view.EditImage({
+        model: selection.single(),
+        controller: this
+      }).render(); // Set the view to the EditImage frame using the selected image.
+
+      this.content.set(view); // After bringing in the frame, load the actual editor via an ajax call.
+
+      view.loadEditor();
+    },
+
+    /**
+     * Create the default states.
+     *
+     * @return {void}
+     */
+    createStates: function createStates() {
+      this.on('toolbar:create:featured-image', this.featuredImageToolbar, this);
+      this.on('content:render:edit-image', this.editState, this);
+      this.states.add([new wp.media.controller.FeaturedImage(), new wp.media.controller.EditImage({
+        model: this.options.editImage
+      })]);
+    }
+  });
+};
+/**
+ * Prepares the Gallery toolbars and frames.
+ *
+ * @return {wp.media.view.MediaFrame.Post} The default media workflow.
+ */
+
+
+const getGalleryDetailsMediaFrame = () => {
+  /**
+   * Custom gallery details frame.
+   *
+   * @see https://github.com/xwp/wp-core-media-widgets/blob/905edbccfc2a623b73a93dac803c5335519d7837/wp-admin/js/widgets/media-gallery-widget.js
+   * @class GalleryDetailsMediaFrame
+   * @class
+   */
+  return wp.media.view.MediaFrame.Post.extend({
+    /**
+     * Set up gallery toolbar.
+     *
+     * @return {void}
+     */
+    galleryToolbar() {
+      const editing = this.state().get('editing');
+      this.toolbar.set(new wp.media.view.Toolbar({
+        controller: this,
+        items: {
+          insert: {
+            style: 'primary',
+            text: editing ? wp.media.view.l10n.updateGallery : wp.media.view.l10n.insertGallery,
+            priority: 80,
+            requires: {
+              library: true
+            },
+
+            /**
+             * @fires wp.media.controller.State#update
+             */
+            click() {
+              const controller = this.controller,
+                    state = controller.state();
+              controller.close();
+              state.trigger('update', state.get('library')); // Restore and reset the default state.
+
+              controller.setState(controller.options.state);
+              controller.reset();
+            }
+
+          }
+        }
+      }));
+    },
+
+    /**
+     * Handle the edit state requirements of selected media item.
+     *
+     * @return {void}
+     */
+    editState() {
+      const selection = this.state('gallery').get('selection');
+      const view = new wp.media.view.EditImage({
+        model: selection.single(),
+        controller: this
+      }).render(); // Set the view to the EditImage frame using the selected image.
+
+      this.content.set(view); // After bringing in the frame, load the actual editor via an ajax call.
+
+      view.loadEditor();
+    },
+
+    /**
+     * Create the default states.
+     *
+     * @return {void}
+     */
+    createStates: function createStates() {
+      this.on('toolbar:create:main-gallery', this.galleryToolbar, this);
+      this.on('content:render:edit-image', this.editState, this);
+      this.states.add([new wp.media.controller.Library({
+        id: 'gallery',
+        title: wp.media.view.l10n.createGalleryTitle,
+        priority: 40,
+        toolbar: 'main-gallery',
+        filterable: 'uploaded',
+        multiple: 'add',
+        editable: false,
+        library: wp.media.query({
+          type: 'image',
+          ...this.options.library
+        })
+      }), new wp.media.controller.EditImage({
+        model: this.options.editImage
+      }), new wp.media.controller.GalleryEdit({
+        library: this.options.selection,
+        editing: this.options.editing,
+        menu: 'gallery',
+        displaySettings: false,
+        multiple: true
+      }), new wp.media.controller.GalleryAdd()]);
+    }
+  });
+}; // The media library image object contains numerous attributes
+// we only need this set to display the image in the library.
+
+
+const slimImageObject = img => {
+  const attrSet = ['sizes', 'mime', 'type', 'subtype', 'id', 'url', 'alt', 'link', 'caption'];
+  return attrSet.reduce((result, key) => {
+    if (img !== null && img !== void 0 && img.hasOwnProperty(key)) {
+      result[key] = img[key];
+    }
+
+    return result;
+  }, {});
+};
+
+const getAttachmentsCollection = ids => {
+  return wp.media.query({
+    order: 'ASC',
+    orderby: 'post__in',
+    post__in: ids,
+    posts_per_page: -1,
+    query: true,
+    type: 'image'
+  });
+};
+
+class MediaUpload extends external_wp_element_namespaceObject.Component {
+  constructor(_ref) {
+    let {
+      allowedTypes,
+      gallery = false,
+      unstableFeaturedImageFlow = false,
+      modalClass,
+      multiple = false,
+      title = (0,external_wp_i18n_namespaceObject.__)('Select or Upload Media')
+    } = _ref;
+    super(...arguments);
+    this.openModal = this.openModal.bind(this);
+    this.onOpen = this.onOpen.bind(this);
+    this.onSelect = this.onSelect.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
+    this.onClose = this.onClose.bind(this);
+
+    if (gallery) {
+      this.buildAndSetGalleryFrame();
+    } else {
+      const frameConfig = {
+        title,
+        multiple
+      };
+
+      if (!!allowedTypes) {
+        frameConfig.library = {
+          type: allowedTypes
+        };
+      }
+
+      this.frame = wp.media(frameConfig);
+    }
+
+    if (modalClass) {
+      this.frame.$el.addClass(modalClass);
+    }
+
+    if (unstableFeaturedImageFlow) {
+      this.buildAndSetFeatureImageFrame();
+    }
+
+    this.initializeListeners();
+  }
+
+  initializeListeners() {
+    // When an image is selected in the media frame...
+    this.frame.on('select', this.onSelect);
+    this.frame.on('update', this.onUpdate);
+    this.frame.on('open', this.onOpen);
+    this.frame.on('close', this.onClose);
+  }
+  /**
+   * Sets the Gallery frame and initializes listeners.
+   *
+   * @return {void}
+   */
+
+
+  buildAndSetGalleryFrame() {
+    const {
+      addToGallery = false,
+      allowedTypes,
+      multiple = false,
+      value = DEFAULT_EMPTY_GALLERY
+    } = this.props; // If the value did not changed there is no need to rebuild the frame,
+    // we can continue to use the existing one.
+
+    if (value === this.lastGalleryValue) {
+      return;
+    }
+
+    this.lastGalleryValue = value; // If a frame already existed remove it.
+
+    if (this.frame) {
+      this.frame.remove();
+    }
+
+    let currentState;
+
+    if (addToGallery) {
+      currentState = 'gallery-library';
+    } else {
+      currentState = value && value.length ? 'gallery-edit' : 'gallery';
+    }
+
+    if (!this.GalleryDetailsMediaFrame) {
+      this.GalleryDetailsMediaFrame = getGalleryDetailsMediaFrame();
+    }
+
+    const attachments = getAttachmentsCollection(value);
+    const selection = new wp.media.model.Selection(attachments.models, {
+      props: attachments.props.toJSON(),
+      multiple
+    });
+    this.frame = new this.GalleryDetailsMediaFrame({
+      mimeType: allowedTypes,
+      state: currentState,
+      multiple,
+      selection,
+      editing: value && value.length ? true : false
+    });
+    wp.media.frame = this.frame;
+    this.initializeListeners();
+  }
+  /**
+   * Initializes the Media Library requirements for the featured image flow.
+   *
+   * @return {void}
+   */
+
+
+  buildAndSetFeatureImageFrame() {
+    const featuredImageFrame = getFeaturedImageMediaFrame();
+    const attachments = getAttachmentsCollection(this.props.value);
+    const selection = new wp.media.model.Selection(attachments.models, {
+      props: attachments.props.toJSON()
+    });
+    this.frame = new featuredImageFrame({
+      mimeType: this.props.allowedTypes,
+      state: 'featured-image',
+      multiple: this.props.multiple,
+      selection,
+      editing: this.props.value ? true : false
+    });
+    wp.media.frame = this.frame;
+  }
+
+  componentWillUnmount() {
+    this.frame.remove();
+  }
+
+  onUpdate(selections) {
+    const {
+      onSelect,
+      multiple = false
+    } = this.props;
+    const state = this.frame.state();
+    const selectedImages = selections || state.get('selection');
+
+    if (!selectedImages || !selectedImages.models.length) {
+      return;
+    }
+
+    if (multiple) {
+      onSelect(selectedImages.models.map(model => slimImageObject(model.toJSON())));
+    } else {
+      onSelect(slimImageObject(selectedImages.models[0].toJSON()));
+    }
+  }
+
+  onSelect() {
+    const {
+      onSelect,
+      multiple = false
+    } = this.props; // Get media attachment details from the frame state.
+
+    const attachment = this.frame.state().get('selection').toJSON();
+    onSelect(multiple ? attachment : attachment[0]);
+  }
+
+  onOpen() {
+    const {
+      value
+    } = this.props;
+    this.updateCollection(); //Handle active tab in media model on model open.
+
+    if (this.props.mode) {
+      this.frame.content.mode(this.props.mode);
+    } // Handle both this.props.value being either (number[]) multiple ids
+    // (for galleries) or a (number) singular id (e.g. image block).
+
+
+    const hasMedia = Array.isArray(value) ? !!(value !== null && value !== void 0 && value.length) : !!value;
+
+    if (!hasMedia) {
+      return;
+    }
+
+    const isGallery = this.props.gallery;
+    const selection = this.frame.state().get('selection');
+    const valueArray = Array.isArray(value) ? value : [value];
+
+    if (!isGallery) {
+      valueArray.forEach(id => {
+        selection.add(wp.media.attachment(id));
+      });
+    } // Load the images so they are available in the media modal.
+
+
+    const attachments = getAttachmentsCollection(valueArray); // Once attachments are loaded, set the current selection.
+
+    attachments.more().done(function () {
+      var _attachments$models;
+
+      if (isGallery && attachments !== null && attachments !== void 0 && (_attachments$models = attachments.models) !== null && _attachments$models !== void 0 && _attachments$models.length) {
+        selection.add(attachments.models);
+      }
+    });
+  }
+
+  onClose() {
+    const {
+      onClose
+    } = this.props;
+
+    if (onClose) {
+      onClose();
+    }
+  }
+
+  updateCollection() {
+    const frameContent = this.frame.content.get();
+
+    if (frameContent && frameContent.collection) {
+      const collection = frameContent.collection; // Clean all attachments we have in memory.
+
+      collection.toArray().forEach(model => model.trigger('destroy', model)); // Reset has more flag, if library had small amount of items all items may have been loaded before.
+
+      collection.mirroring._hasMore = true; // Request items.
+
+      collection.more();
+    }
+  }
+
+  openModal() {
+    if (this.props.gallery) {
+      this.buildAndSetGalleryFrame();
+    }
+
+    this.frame.open();
+  }
+
+  render() {
+    return this.props.render({
+      open: this.openModal
+    });
+  }
+
+}
+
+/* harmony default export */ var media_upload = (MediaUpload);
+
+;// CONCATENATED MODULE: ./packages/media-utils/build-module/components/index.js
+
+
+;// CONCATENATED MODULE: external ["wp","apiFetch"]
+var external_wp_apiFetch_namespaceObject = window["wp"]["apiFetch"];
+var external_wp_apiFetch_default = /*#__PURE__*/__webpack_require__.n(external_wp_apiFetch_namespaceObject);
+;// CONCATENATED MODULE: external ["wp","blob"]
+var external_wp_blob_namespaceObject = window["wp"]["blob"];
+;// CONCATENATED MODULE: ./packages/media-utils/build-module/utils/upload-media.js
+/**
+ * WordPress dependencies
+ */
+
+
+
+
+const noop = () => {};
+/**
+ * Browsers may use unexpected mime types, and they differ from browser to browser.
+ * This function computes a flexible array of mime types from the mime type structured provided by the server.
+ * Converts { jpg|jpeg|jpe: "image/jpeg" } into [ "image/jpeg", "image/jpg", "image/jpeg", "image/jpe" ]
+ * The computation of this array instead of directly using the object,
+ * solves the problem in chrome where mp3 files have audio/mp3 as mime type instead of audio/mpeg.
+ * https://bugs.chromium.org/p/chromium/issues/detail?id=227004
+ *
+ * @param {?Object} wpMimeTypesObject Mime type object received from the server.
+ *                                    Extensions are keys separated by '|' and values are mime types associated with an extension.
+ *
+ * @return {?Array} An array of mime types or the parameter passed if it was "falsy".
+ */
+
+
+function getMimeTypesArray(wpMimeTypesObject) {
+  if (!wpMimeTypesObject) {
+    return wpMimeTypesObject;
+  }
+
+  return Object.entries(wpMimeTypesObject).map(_ref => {
+    let [extensionsString, mime] = _ref;
+    const [type] = mime.split('/');
+    const extensions = extensionsString.split('|');
+    return [mime, ...extensions.map(extension => `${type}/${extension}`)];
+  }).flat();
+}
+/**
+ *	Media Upload is used by audio, image, gallery, video, and file blocks to
+ *	handle uploading a media file when a file upload button is activated.
+ *
+ *	TODO: future enhancement to add an upload indicator.
+ *
+ * @param {Object}   $0                    Parameters object passed to the function.
+ * @param {?Array}   $0.allowedTypes       Array with the types of media that can be uploaded, if unset all types are allowed.
+ * @param {?Object}  $0.additionalData     Additional data to include in the request.
+ * @param {Array}    $0.filesList          List of files.
+ * @param {?number}  $0.maxUploadFileSize  Maximum upload size in bytes allowed for the site.
+ * @param {Function} $0.onError            Function called when an error happens.
+ * @param {Function} $0.onFileChange       Function called each time a file or a temporary representation of the file is available.
+ * @param {?Object}  $0.wpAllowedMimeTypes List of allowed mime types and file extensions.
+ */
+
+async function uploadMedia(_ref2) {
+  let {
+    allowedTypes,
+    additionalData = {},
+    filesList,
+    maxUploadFileSize,
+    onError = noop,
+    onFileChange,
+    wpAllowedMimeTypes = null
+  } = _ref2;
+  // Cast filesList to array.
+  const files = [...filesList];
+  const filesSet = [];
+
+  const setAndUpdateFiles = (idx, value) => {
+    var _filesSet$idx;
+
+    (0,external_wp_blob_namespaceObject.revokeBlobURL)((_filesSet$idx = filesSet[idx]) === null || _filesSet$idx === void 0 ? void 0 : _filesSet$idx.url);
+    filesSet[idx] = value;
+    onFileChange(filesSet.filter(Boolean));
+  }; // Allowed type specified by consumer.
+
+
+  const isAllowedType = fileType => {
+    if (!allowedTypes) {
+      return true;
+    }
+
+    return allowedTypes.some(allowedType => {
+      // If a complete mimetype is specified verify if it matches exactly the mime type of the file.
+      if (allowedType.includes('/')) {
+        return allowedType === fileType;
+      } // Otherwise a general mime type is used and we should verify if the file mimetype starts with it.
+
+
+      return fileType.startsWith(`${allowedType}/`);
+    });
+  }; // Allowed types for the current WP_User.
+
+
+  const allowedMimeTypesForUser = getMimeTypesArray(wpAllowedMimeTypes);
+
+  const isAllowedMimeTypeForUser = fileType => {
+    return allowedMimeTypesForUser.includes(fileType);
+  };
+
+  const validFiles = [];
+
+  for (const mediaFile of files) {
+    // Verify if user is allowed to upload this mime type.
+    // Defer to the server when type not detected.
+    if (allowedMimeTypesForUser && mediaFile.type && !isAllowedMimeTypeForUser(mediaFile.type)) {
+      onError({
+        code: 'MIME_TYPE_NOT_ALLOWED_FOR_USER',
+        message: (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s: file name.
+        (0,external_wp_i18n_namespaceObject.__)('%s: Sorry, you are not allowed to upload this file type.'), mediaFile.name),
+        file: mediaFile
+      });
+      continue;
+    } // Check if the block supports this mime type.
+    // Defer to the server when type not detected.
+
+
+    if (mediaFile.type && !isAllowedType(mediaFile.type)) {
+      onError({
+        code: 'MIME_TYPE_NOT_SUPPORTED',
+        message: (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s: file name.
+        (0,external_wp_i18n_namespaceObject.__)('%s: Sorry, this file type is not supported here.'), mediaFile.name),
+        file: mediaFile
+      });
+      continue;
+    } // Verify if file is greater than the maximum file upload size allowed for the site.
+
+
+    if (maxUploadFileSize && mediaFile.size > maxUploadFileSize) {
+      onError({
+        code: 'SIZE_ABOVE_LIMIT',
+        message: (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s: file name.
+        (0,external_wp_i18n_namespaceObject.__)('%s: This file exceeds the maximum upload size for this site.'), mediaFile.name),
+        file: mediaFile
+      });
+      continue;
+    } // Don't allow empty files to be uploaded.
+
+
+    if (mediaFile.size <= 0) {
+      onError({
+        code: 'EMPTY_FILE',
+        message: (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s: file name.
+        (0,external_wp_i18n_namespaceObject.__)('%s: This file is empty.'), mediaFile.name),
+        file: mediaFile
+      });
+      continue;
+    }
+
+    validFiles.push(mediaFile); // Set temporary URL to create placeholder media file, this is replaced
+    // with final file from media gallery when upload is `done` below.
+
+    filesSet.push({
+      url: (0,external_wp_blob_namespaceObject.createBlobURL)(mediaFile)
+    });
+    onFileChange(filesSet);
+  }
+
+  for (let idx = 0; idx < validFiles.length; ++idx) {
+    const mediaFile = validFiles[idx];
+
+    try {
+      var _savedMedia$caption$r, _savedMedia$caption;
+
+      const savedMedia = await createMediaFromFile(mediaFile, additionalData); // eslint-disable-next-line camelcase
+
+      const {
+        alt_text,
+        source_url,
+        ...savedMediaProps
+      } = savedMedia;
+      const mediaObject = { ...savedMediaProps,
+        alt: savedMedia.alt_text,
+        caption: (_savedMedia$caption$r = (_savedMedia$caption = savedMedia.caption) === null || _savedMedia$caption === void 0 ? void 0 : _savedMedia$caption.raw) !== null && _savedMedia$caption$r !== void 0 ? _savedMedia$caption$r : '',
+        title: savedMedia.title.raw,
+        url: savedMedia.source_url
+      };
+      setAndUpdateFiles(idx, mediaObject);
+    } catch (error) {
+      // Reset to empty on failure.
+      setAndUpdateFiles(idx, null);
+      let message;
+
+      if (error.message) {
+        message = error.message;
+      } else {
+        message = (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s: file name
+        (0,external_wp_i18n_namespaceObject.__)('Error while uploading file %s to the media library.'), mediaFile.name);
+      }
+
+      onError({
+        code: 'GENERAL',
+        message,
+        file: mediaFile
+      });
+    }
+  }
+}
+/**
+ * @param {File}    file           Media File to Save.
+ * @param {?Object} additionalData Additional data to include in the request.
+ *
+ * @return {Promise} Media Object Promise.
+ */
+
+function createMediaFromFile(file, additionalData) {
+  // Create upload payload.
+  const data = new window.FormData();
+  data.append('file', file, file.name || file.type.replace('/', '.'));
+
+  if (additionalData) {
+    Object.entries(additionalData).forEach(_ref3 => {
+      let [key, value] = _ref3;
+      return data.append(key, value);
+    });
+  }
+
+  return external_wp_apiFetch_default()({
+    path: '/wp/v2/media',
+    body: data,
+    method: 'POST'
+  });
+}
+
+;// CONCATENATED MODULE: ./packages/media-utils/build-module/utils/index.js
+
+
+;// CONCATENATED MODULE: ./packages/media-utils/build-module/index.js
+
+
+
+(window.wp = window.wp || {}).mediaUtils = __webpack_exports__;
+/******/ })()
+;

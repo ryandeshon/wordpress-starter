@@ -4,7 +4,7 @@
  *
  * @since 8.2.0
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 namespace Automattic\Jetpack\Extensions\Calendly;
@@ -21,7 +21,7 @@ const BLOCK_NAME   = 'jetpack/' . FEATURE_NAME;
  * registration if we need to.
  */
 function register_block() {
-	jetpack_register_block(
+	Blocks::jetpack_register_block(
 		BLOCK_NAME,
 		array(
 			'render_callback' => __NAMESPACE__ . '\load_assets',
@@ -116,11 +116,7 @@ function load_assets( $attr, $content ) {
 				esc_attr( $block_id )
 			);
 			$script  = <<<JS_END
-Calendly.initInlineWidget({
-	url: '%s',
-	parentElement: document.getElementById('%s'),
-	inlineStyles: false,
-});
+jetpackInitCalendly( '%s', '%s' );
 JS_END;
 			wp_add_inline_script( 'jetpack-calendly-external-js', sprintf( $script, esc_url( $url ), esc_js( $block_id ) ) );
 		}
@@ -173,7 +169,30 @@ function enqueue_calendly_js() {
 
 	wp_add_inline_script(
 		'jetpack-calendly-external-js',
-		"function calendly_attach_link_events( elementId ) {
+		"function jetpackInitCalendly( url, elementId ) {
+			function initCalendlyWidget() {
+				if ( ! document.getElementById( elementId ) ) {
+					return;
+				}
+				Calendly.initInlineWidget({
+					url: url,
+					parentElement: document.getElementById( elementId ),
+					inlineStyles: false,
+				});
+			};
+			// For P2s only: wait until after o2 has
+			// replaced main#content to initialize widget.
+			if ( window.jQuery && window.o2 ) {
+				jQuery( 'body' ).on( 'ready_o2', function() { initCalendlyWidget() } );
+			// Else initialize widget without waiting.
+			} else {
+				document.addEventListener('DOMContentLoaded', function() {
+					initCalendlyWidget();
+				});
+			}
+		};
+
+		function calendly_attach_link_events( elementId ) {
 			var widget = document.getElementById( elementId );
 			if ( widget ) {
 				widget.addEventListener( 'click', function( event ) {
