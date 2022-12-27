@@ -532,3 +532,23 @@ function starter_register_required_plugins() {
 	tgmpa( $plugins, $config );
 }
 add_action( 'tgmpa_register', 'starter_register_required_plugins' );
+
+add_action( 'init', 'cp_change_post_object' );
+// Change dashboard Posts to Projects
+function cp_change_post_object() {
+    $get_post_type = get_post_type_object('post');
+    $labels = $get_post_type->labels;
+        $labels->name = 'Project';
+        $labels->singular_name = 'Project';
+        $labels->add_new = 'Add Project';
+        $labels->add_new_item = 'Add Project';
+        $labels->edit_item = 'Edit Project';
+        $labels->new_item = 'Project';
+        $labels->view_item = 'View Project';
+        $labels->search_items = 'Search Projects';
+        $labels->not_found = 'No Project found';
+        $labels->not_found_in_trash = 'No Project found in Trash';
+        $labels->all_items = 'All Projects';
+        $labels->menu_name = 'Projects';
+        $labels->name_admin_bar = 'Projects';
+}
