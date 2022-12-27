@@ -597,6 +597,9 @@ video {
   -moz-osx-font-smoothing: grayscale;
   text-shadow: none;
   text-rendering: optimizeLegibility;
+  margin: 0;
+  padding: 0;
+  font: inherit;
 }
 
 *,
@@ -605,11 +608,24 @@ video {
   box-sizing: inherit;
 }
 
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+html {
+  color-scheme: dark light;
+}
+
 body {
   font-family: "Fort-Bold";
   font-style: normal;
   color: #000;
   margin: 0px;
+  min-height: 100vh;
 }
 body.admin #navigation {
   top: 32px;
