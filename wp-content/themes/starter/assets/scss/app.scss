@@ -32,6 +32,9 @@ $small: "only screen and (max-width : 640px)";
   -moz-osx-font-smoothing: grayscale;
   text-shadow: none;
   text-rendering: optimizeLegibility;
+  margin: 0;
+  padding: 0;
+  font: inherit;
 }
 *,
 ::after,
@@ -40,12 +43,24 @@ $small: "only screen and (max-width : 640px)";
   -moz-box-sizing: inherit;
   box-sizing: inherit;
 }
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+html {
+  color-scheme: dark light;
+}
 
 body {
   font-family: "Fort-Bold";
   font-style: normal;
   color: #000;
   margin: 0px;
+  min-height: 100vh;
 
   &.admin {
     #navigation {
