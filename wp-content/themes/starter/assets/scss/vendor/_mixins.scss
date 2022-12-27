@@ -1,0 +1,66 @@
+@mixin slider_background-image ($colorstart:#F5F5F5, $colorend:#F9F9F9, $backcolor: #F7F7F7) {
+  background-color: $backcolor;
+  background-image: -moz-linear-gradient(top, $colorstart, $colorend);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from($colorstart), to($colorend));
+  background-image: -webkit-linear-gradient(top, $colorstart, $colorend);
+  background-image: -o-linear-gradient(top, $colorstart, $colorend);
+  background-image: linear-gradient(to bottom, $colorstart, $colorend);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$colorstart}', endColorstr='#{$colorend}',GradientType=0);
+}
+@mixin slider_box-sizing ($value) {
+  -webkit-box-sizing: $value;
+  -moz-box-sizing: $value;
+  box-sizing: $value;
+}
+@mixin slider_box-shadow ($value...) {
+  -webkit-box-shadow: $value;
+  -moz-box-shadow: $value;
+  box-shadow: $value;
+}
+@mixin slider_border-radius ($value) {
+  -webkit-border-radius: $value;
+  -moz-border-radius: $value;
+  border-radius: $value;
+}
+
+// The Media Query Mixin
+// -------
+// FOR: Write less verbose Media Queries with variables or using straight figures (eg 320px)
+// USE: @include mq(320px, 798px);
+// USE: @include mq($tablet, $desktop);
+// USE: @include mq(max, $desktop);
+
+// variable enables or disables MQ mixin
+$MQs: true;
+
+@mixin mq($bp-1, $bp-2:null) {
+  @if ($MQs) {
+    @if $bp-1=="max" {
+      @media (max-width: $bp-2 - 1) {
+        @content;
+      }
+    }
+    @else if $bp-2=="max" {
+      @media (max-width: $bp-1 - 1) {
+        @content;
+      }
+    }
+    @else if $bp-2==null {
+      @media (min-width: $bp-1) {
+        @content;
+      }
+    }
+    //single bp
+    @else {
+      @media (min-width: $bp-1) and (max-width:$bp-2 - 1) {
+        @content;
+      }
+    }
+    //bracketed breakpoint
+  }
+
+  @else {
+    @content;
+  }
+}
